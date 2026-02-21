@@ -3,825 +3,230 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Science is the superpower you were born with. Nature put it there first. Join the Spark Cadets.">
-<meta property="og:title" content="Spark Squad — Science is Your Superpower">
-<meta property="og:description" content="60-second science missions. Ancient knowledge meets modern experiments. Join the Spark Cadets.">
-<meta property="og:image" content="https://sparksquadstudios.com/og-image.jpg">
-<title>Spark Squad — Science is Your Superpower</title>
-
+<meta name="description" content="The roots and the circuits speak the same language. 60-second science missions for the whole family. Join the Spark Cadets.">
+<title>Spark Squad — Science Is How We See It</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400;1,9..144,700&display=swap" rel="stylesheet">
-
 <style>
-/* ════════════════════════════════════════════════
-   DESIGN DIRECTION: Warm bioluminescent lab journal
-   Bold organic-tech. Feels alive. Warm dark.
-   Fraunces (editorial serif) + Unbounded (tech bold) + DM Mono
-   ════════════════════════════════════════════════ */
+:root{--bg:#06080E;--bg2:#0C1018;--bg3:#131B24;--card:#0F1520;--card2:#1A2235;--brd:rgba(255,255,255,.07);--brd2:rgba(255,255,255,.14);--eshe:#00F5A0;--malik:#8B5CF6;--rosa:#FF4F6D;--kofi:#F59E0B;--nuru:#FDE68A;--finn:#38BDF8;--t1:#FAF7F2;--t2:rgba(250,247,242,.65);--t3:rgba(250,247,242,.35);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--t1);font-family:'Fraunces',Georgia,serif;overflow-x:hidden;}
+*,a,button{cursor:none!important;}
+.cursor{width:12px;height:12px;border-radius:50%;background:var(--eshe);position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s;mix-blend-mode:screen;}
+.cursor-ring{width:36px;height:36px;border-radius:50%;border:1px solid rgba(0,245,160,.4);position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .25s cubic-bezier(.23,1,.32,1),width .25s,height .25s;}
+.cursor.grow{width:20px;height:20px;}.cursor-ring.grow{width:56px;height:56px;}
+.atmo{position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 70% 50% at 15% 15%,rgba(0,245,160,.07) 0%,transparent 55%),radial-gradient(ellipse 50% 40% at 85% 75%,rgba(139,92,246,.08) 0%,transparent 55%);}
+.noise{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:256px;}
 
-:root {
-  /* Brand */
-  --eshe: #00F5A0;
-  --malik: #8B5CF6;
-  --rosa: #FF4F6D;
-  --kofi: #F59E0B;
-  --nuru: #FDE68A;
-  --finn: #38BDF8;
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 clamp(20px,5vw,60px);height:64px;display:flex;align-items:center;justify-content:space-between;background:rgba(6,8,14,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--brd);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-mark{width:30px;height:36px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.nav-wordmark{font-family:'Unbounded',sans-serif;font-weight:900;font-size:14px;letter-spacing:-.3px;color:var(--t1);}.nav-wordmark span{color:var(--eshe);}
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-handle{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--t3);text-decoration:none;transition:color .2s;}.nav-handle:hover{color:var(--eshe);}
+.nav-cta{font-family:'Unbounded',sans-serif;font-weight:700;font-size:11px;color:var(--bg);background:var(--eshe);border:none;border-radius:100px;padding:9px 18px;text-decoration:none;transition:transform .15s,box-shadow .2s;white-space:nowrap;}.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,245,160,.35);}
 
-  /* Backgrounds */
-  --bg:    #06080E;
-  --bg2:   #0C1018;
-  --bg3:   #131B24;
-  --card:  #0F1520;
+/* LIVING BOLT ANIMATIONS */
+.bolt-main{stroke:#00F5A0;stroke-width:5.5;stroke-linecap:round;stroke-linejoin:round;fill:none;animation:bolt-pulse 2.4s ease-in-out infinite;}
+.bolt-leaf-l{fill:#00F5A0;animation:leaf-breathe 3s ease-in-out infinite;}
+.bolt-leaf-r{fill:#00F5A0;opacity:.78;animation:leaf-breathe 3s .5s ease-in-out infinite;}
+.bolt-root-l,.bolt-root-r{stroke:#00F5A0;stroke-width:2;stroke-linecap:round;fill:none;opacity:.55;animation:root-glow 4s ease-in-out infinite;}
+.bolt-spark1{fill:#FDE68A;animation:spark-flick 1.9s ease-in-out infinite;}
+.bolt-spark2{fill:#FDE68A;opacity:.6;animation:spark-flick 1.9s .5s ease-in-out infinite;}
+@keyframes bolt-pulse{0%,100%{stroke:#00F5A0;}50%{stroke:#50FFBA;}}
+@keyframes leaf-breathe{0%,100%{opacity:1;}50%{opacity:.7;}}
+@keyframes root-glow{0%,100%{opacity:.55;}50%{opacity:.9;}}
+@keyframes spark-flick{0%,100%{opacity:1;r:2.5;}40%{opacity:.2;r:1;}60%{opacity:1;r:3.2;}}
 
-  /* Text */
-  --t1: #FAF7F2;
-  --t2: rgba(250,247,242,.65);
-  --t3: rgba(250,247,242,.35);
+/* HERO */
+.hero{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px clamp(20px,6vw,80px) 80px;text-align:center;overflow:hidden;}
+.bio-lines{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.bio-line{position:absolute;height:1px;opacity:0;animation:bio-travel 6s ease-in-out infinite;}
+.bio-line:nth-child(1){top:25%;width:60%;left:-10%;animation-delay:0s;background:linear-gradient(90deg,transparent,var(--eshe),transparent);}
+.bio-line:nth-child(2){top:45%;width:40%;left:60%;animation-delay:2s;background:linear-gradient(90deg,transparent,rgba(253,230,138,.6),transparent);}
+.bio-line:nth-child(3){top:65%;width:50%;left:20%;animation-delay:4s;background:linear-gradient(90deg,transparent,rgba(139,92,246,.5),transparent);}
+.bio-line:nth-child(4){top:80%;width:35%;left:5%;animation-delay:1s;background:linear-gradient(90deg,transparent,var(--eshe),transparent);}
+.bio-line:nth-child(5){top:14%;width:45%;left:40%;animation-delay:3s;background:linear-gradient(90deg,transparent,rgba(253,230,138,.5),transparent);}
+@keyframes bio-travel{0%{opacity:0;transform:scaleX(0);transform-origin:left;}20%{opacity:.6;}60%{opacity:.3;}100%{opacity:0;transform:scaleX(1);}}
+.hero-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--eshe);border:1px solid rgba(0,245,160,.2);background:rgba(0,245,160,.05);padding:6px 18px;border-radius:100px;display:inline-block;margin-bottom:22px;opacity:0;animation:fade-up .6s .2s ease forwards;}
+.hero-h1{font-family:'Fraunces',Georgia,serif;font-weight:700;font-size:clamp(36px,8vw,92px);line-height:.92;letter-spacing:-3px;margin-bottom:16px;opacity:0;animation:fade-up .7s .35s ease forwards;max-width:900px;}
+.hero-h1 em{font-style:italic;color:var(--eshe);position:relative;}
+.hero-h1 em::after{content:'';position:absolute;bottom:4px;left:0;right:0;height:3px;background:var(--eshe);border-radius:2px;opacity:.35;}
+.hero-proof{font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(10px,2vw,16px);letter-spacing:2px;text-transform:uppercase;color:var(--nuru);display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;opacity:0;animation:fade-up .6s .5s ease forwards;}
+.proof-dot{width:4px;height:4px;border-radius:50%;background:var(--nuru);opacity:.5;flex-shrink:0;}
+.hero-sub{font-size:clamp(15px,2.2vw,20px);color:var(--t2);max-width:500px;line-height:1.65;margin:0 auto 34px;font-style:italic;opacity:0;animation:fade-up .7s .62s ease forwards;}
+.hero-sub strong{color:var(--t1);font-style:normal;}
+.email-form{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:460px;margin:0 auto 14px;opacity:0;animation:fade-up .7s .74s ease forwards;}
+.email-input{flex:1;min-width:200px;font-family:'Fraunces',serif;font-size:15px;color:var(--t1);background:var(--card);border:1px solid var(--brd2);border-radius:12px;padding:14px 18px;outline:none;transition:border-color .2s,box-shadow .2s;}
+.email-input::placeholder{color:var(--t3);}
+.email-input:focus{border-color:rgba(0,245,160,.4);box-shadow:0 0 0 3px rgba(0,245,160,.08);}
+.email-submit{font-family:'Unbounded',sans-serif;font-weight:700;font-size:12px;color:var(--bg);background:linear-gradient(135deg,var(--eshe),#00C882);border:none;border-radius:12px;padding:14px 22px;cursor:pointer;box-shadow:0 0 24px rgba(0,245,160,.3);transition:transform .15s,box-shadow .2s;white-space:nowrap;}
+.email-submit:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(0,245,160,.4);}
+.success-msg{display:none;background:rgba(0,245,160,.08);border:1px solid rgba(0,245,160,.25);border-radius:12px;padding:14px 24px;font-family:'DM Mono',monospace;font-size:12px;color:var(--eshe);letter-spacing:1px;}
+.email-note{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);opacity:0;animation:fade-up .6s .88s ease forwards;}
+.email-note a{color:var(--eshe);text-decoration:none;}
+.hero-social{display:flex;align-items:center;gap:14px;justify-content:center;margin-top:32px;flex-wrap:wrap;opacity:0;animation:fade-up .6s 1s ease forwards;}
+.hs-link{display:flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--t3);text-decoration:none;border:1px solid var(--brd);padding:8px 14px;border-radius:100px;transition:color .2s,border-color .2s;}
+.hs-link:hover{color:var(--t1);border-color:var(--brd2);}
 
-  /* Borders */
-  --brd: rgba(250,247,242,.07);
-  --brd2: rgba(250,247,242,.12);
+/* MARQUEE */
+.marquee-wrap{position:relative;z-index:1;border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);background:rgba(0,245,160,.025);overflow:hidden;padding:13px 0;}
+.marquee-inner{display:flex;animation:marquee 30s linear infinite;white-space:nowrap;width:max-content;}
+.marquee-item{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);padding:0 28px;display:flex;align-items:center;gap:14px;}
+.marquee-dot{color:var(--eshe);font-size:6px;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-  /* Glow */
-  --glow-green: rgba(0,245,160,.18);
-  --glow-amber: rgba(253,230,138,.12);
-}
+/* SECTION BASE */
+.section{position:relative;z-index:1;padding:clamp(60px,8vw,120px) clamp(20px,6vw,80px);max-width:1100px;margin:0 auto;}
+.section-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--eshe);display:block;margin-bottom:14px;}
+.section-h2{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(28px,5vw,58px);line-height:.95;letter-spacing:-2px;margin-bottom:18px;}
+.section-h2 em{color:var(--eshe);font-style:italic;}
 
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+/* ABOUT */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;}
+.col-text p{font-size:16px;color:var(--t2);line-height:1.8;margin-bottom:16px;}
+.col-text p strong{color:var(--t1);}
+.stat-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--brd);border:1px solid var(--brd);border-radius:14px;overflow:hidden;margin-top:32px;}
+.stat-item{background:var(--card);padding:18px;text-align:center;}
+.stat-num{font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(24px,4vw,40px);letter-spacing:-2px;color:var(--eshe);display:block;margin-bottom:3px;line-height:1;}
+.stat-lbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);}
+.visual-panel{background:var(--card);border:1px solid var(--brd);border-radius:22px;overflow:hidden;}
+.vp-top{background:linear-gradient(135deg,rgba(0,245,160,.08),rgba(139,92,246,.05));padding:26px;border-bottom:1px solid var(--brd);display:flex;flex-direction:column;align-items:center;text-align:center;}
+.beep-mini{font-size:58px;margin-bottom:8px;display:block;filter:drop-shadow(0 0 18px rgba(139,92,246,.4));animation:float 3s ease-in-out infinite;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+.beep-mini-name{font-family:'Unbounded',sans-serif;font-weight:900;font-size:19px;letter-spacing:-.5px;color:var(--malik);margin-bottom:5px;}
+.beep-mini-quote{font-family:'DM Mono',monospace;font-size:11px;color:var(--t3);font-style:italic;}
+.vp-bottom{padding:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.vp-slot{background:var(--bg3);border-radius:9px;padding:10px 8px;text-align:center;border:1px solid var(--brd);transition:border-color .2s;}
+.vp-slot:hover{border-color:rgba(139,92,246,.3);}
+.vp-emoji{font-size:20px;display:block;margin-bottom:3px;}
+.vp-name{font-family:'DM Mono',monospace;font-size:8px;color:var(--t3);}
 
-body {
-  background: var(--bg);
-  color: var(--t1);
-  font-family: 'Fraunces', Georgia, serif;
-  overflow-x: hidden;
-  cursor: default;
-}
+/* PHILOSOPHY BAND — tagline 2 */
+.philosophy-band{position:relative;z-index:1;background:linear-gradient(135deg,rgba(0,245,160,.055),rgba(139,92,246,.04));border-top:1px solid rgba(0,245,160,.1);border-bottom:1px solid rgba(0,245,160,.1);padding:clamp(44px,7vw,80px) clamp(20px,6vw,80px);text-align:center;}
+.pb-kicker{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--eshe);display:block;margin-bottom:14px;}
+.pb-quote{font-family:'Fraunces',serif;font-weight:700;font-style:italic;font-size:clamp(22px,4.5vw,52px);line-height:1.1;letter-spacing:-1px;color:var(--t1);max-width:820px;margin:0 auto 10px;}
+.pb-quote em{color:var(--eshe);}
+.pb-sub{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--t3);}
 
-/* ─── CUSTOM CURSOR ─── */
-*, a, button { cursor: none !important; }
-.cursor {
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: var(--eshe);
-  position: fixed;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%,-50%);
-  transition: transform .12s, width .2s, height .2s, background .2s;
-  mix-blend-mode: screen;
-}
-.cursor-ring {
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(0,245,160,.4);
-  position: fixed;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%,-50%);
-  transition: transform .25s cubic-bezier(.23,1,.32,1), width .25s, height .25s;
-}
-.cursor.grow { width: 20px; height: 20px; }
-.cursor-ring.grow { width: 56px; height: 56px; }
+/* HOW IT WORKS */
+.how-section{position:relative;z-index:1;background:var(--bg2);border-top:1px solid var(--brd);border-bottom:1px solid var(--brd);}
+.how-inner{max-width:1100px;margin:0 auto;padding:clamp(60px,8vw,120px) clamp(20px,6vw,80px);}
+.how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px;}
+.how-card{background:var(--card);border:1px solid var(--brd);border-radius:20px;padding:26px 20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
+.how-card:hover{transform:translateY(-4px);border-color:var(--brd2);}
+.how-card:nth-child(1){border-top:3px solid var(--eshe);}
+.how-card:nth-child(2){border-top:3px solid var(--malik);}
+.how-card:nth-child(3){border-top:3px solid var(--kofi);}
+.how-num{font-family:'Unbounded',sans-serif;font-weight:900;font-size:50px;letter-spacing:-3px;line-height:1;color:var(--t1);opacity:.07;position:absolute;top:12px;right:16px;}
+.how-icon{font-size:28px;display:block;margin-bottom:12px;}
+.how-title{font-family:'Fraunces',serif;font-weight:700;font-size:18px;margin-bottom:9px;line-height:1.2;}
+.how-desc{font-size:14px;color:var(--t2);line-height:1.75;}
 
-/* ─── ATMOSPHERIC BACKGROUND ─── */
-.atmo {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0;
-  background:
-    radial-gradient(ellipse 70% 50% at 15% 15%, rgba(0,245,160,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 85% 75%, rgba(139,92,246,.08) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 50% 100%, rgba(253,230,138,.05) 0%, transparent 60%);
-}
-.noise {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-}
+/* CHARACTERS */
+.chars-section{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:clamp(60px,8vw,120px) clamp(20px,6vw,80px);}
+.chars-scroll{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px;}
+.char-card{background:var(--card);border:1px solid var(--brd);border-radius:15px;padding:18px 12px;text-align:center;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden;}
+.char-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--cc);}
+.char-card:hover{transform:translateY(-5px);box-shadow:0 8px 28px color-mix(in srgb,var(--cc) 12%,transparent);}
+.char-emoji{font-size:36px;display:block;margin-bottom:9px;}
+.char-name{font-family:'Unbounded',sans-serif;font-weight:900;font-size:13px;letter-spacing:-.3px;color:var(--cc);margin-bottom:3px;}
+.char-role{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);margin-bottom:9px;display:block;}
+.char-quote{font-size:11px;font-style:italic;color:var(--t2);line-height:1.5;}
 
-/* ─── NAV ─── */
-nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 0 clamp(20px,5vw,60px);
-  height: 64px;
-  display: flex; align-items: center; justify-content: space-between;
-  background: rgba(6,8,14,.85);
-  backdrop-filter: blur(20px) saturate(150%);
-  border-bottom: 1px solid var(--brd);
-}
-.nav-logo {
-  display: flex; align-items: center; gap: 10px;
-  text-decoration: none;
-}
-.nav-bolt {
-  width: 32px; height: 32px;
-  background: var(--eshe);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  color: var(--bg);
-  flex-shrink: 0;
-  box-shadow: 0 0 16px var(--glow-green);
-}
-.nav-wordmark {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: 14px;
-  letter-spacing: -.3px;
-  color: var(--t1);
-  line-height: 1;
-}
-.nav-wordmark span { color: var(--eshe); }
-.nav-right {
-  display: flex; align-items: center; gap: 12px;
-}
-.nav-handle {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--t3);
-  text-decoration: none;
-  transition: color .2s;
-}
-.nav-handle:hover { color: var(--eshe); }
-.nav-cta {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 11px;
-  letter-spacing: -.2px;
-  color: var(--bg);
-  background: var(--eshe);
-  border: none;
-  border-radius: 100px;
-  padding: 9px 18px;
-  text-decoration: none;
-  transition: transform .15s, box-shadow .2s;
-  box-shadow: 0 0 0 0 var(--glow-green);
-  white-space: nowrap;
-}
-.nav-cta:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 20px var(--glow-green);
-}
+/* ANCIENT KNOWLEDGE BAND — tagline 3 */
+.ancient-band{position:relative;z-index:1;background:var(--bg);border-top:1px solid var(--brd);padding:clamp(44px,7vw,80px) clamp(20px,6vw,80px);}
+.ancient-header{text-align:center;margin-bottom:28px;}
+.ancient-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;background:var(--brd);border:1px solid var(--brd);border-radius:18px;overflow:hidden;}
+.anc-block{background:var(--card);padding:32px 24px;text-align:center;transition:background .2s;}
+.anc-block:hover{background:var(--card2);}
+.anc-icon{font-size:30px;display:block;margin-bottom:10px;}
+.anc-label{font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(13px,2.2vw,20px);letter-spacing:-.5px;margin-bottom:8px;line-height:1.1;}
+.anc-desc{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.5px;color:var(--t3);line-height:1.8;}
 
-/* ─── HERO ─── */
-.hero {
-  position: relative; z-index: 1;
-  min-height: 100vh;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 120px clamp(20px,6vw,80px) 80px;
-  text-align: center;
-  overflow: hidden;
-}
+/* GAME */
+.game-section{position:relative;z-index:1;background:var(--bg2);border-top:1px solid var(--brd);}
+.game-inner{max-width:1100px;margin:0 auto;padding:clamp(60px,8vw,120px) clamp(20px,6vw,80px);display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center;}
+.game-visual{background:var(--card);border:1px solid rgba(139,92,246,.2);border-radius:22px;padding:28px;text-align:center;box-shadow:0 0 50px rgba(139,92,246,.06);position:relative;overflow:hidden;}
+.game-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 50% 0%,rgba(139,92,246,.07),transparent);pointer-events:none;}
+.game-beep-preview{font-size:56px;display:block;margin-bottom:6px;filter:drop-shadow(0 0 18px rgba(139,92,246,.5));animation:float 3s ease-in-out infinite;}
+.game-items-row{display:flex;justify-content:center;gap:10px;font-size:26px;margin-bottom:12px;flex-wrap:wrap;}
+.gitem{display:inline-block;}
+.gitem.f0{animation:gfall 2.2s ease-in-out infinite;}
+.gitem.f1{animation:gfall 2.2s .4s ease-in-out infinite;}
+.gitem.f2{animation:gfall 2.2s .8s ease-in-out infinite;opacity:.45;}
+.gitem.f3{animation:gfall 2.2s 1.2s ease-in-out infinite;}
+.gitem.f4{animation:gfall 2.2s 1.6s ease-in-out infinite;opacity:.45;}
+.gitem.f5{animation:gfall 2.2s 2s ease-in-out infinite;}
+@keyframes gfall{0%{transform:translateY(-8px);opacity:0;}15%{opacity:1;}85%{opacity:1;}100%{transform:translateY(36px);opacity:0;}}
+.game-catcher{width:84px;height:34px;background:rgba(0,245,160,.1);border:2px solid rgba(0,245,160,.4);border-radius:10px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 14px rgba(0,245,160,.2);}
+.game-quote-box{font-family:'DM Mono',monospace;font-size:11px;color:var(--t2);font-style:italic;line-height:1.6;border-left:2px solid rgba(139,92,246,.4);padding-left:14px;text-align:left;max-width:260px;margin:0 auto 16px;}
+.gq-attr{color:var(--t3);font-size:8px;letter-spacing:2px;text-transform:uppercase;font-style:normal;display:block;margin-top:6px;}
+.game-play-btn{display:inline-block;font-family:'Unbounded',sans-serif;font-weight:700;font-size:12px;color:white;background:var(--malik);border:none;border-radius:100px;padding:13px 26px;text-decoration:none;transition:transform .15s,box-shadow .2s;box-shadow:0 4px 20px rgba(139,92,246,.3);cursor:pointer;}
+.game-play-btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(139,92,246,.4);}
 
-/* Animated bioelectric lines behind hero */
-.bio-lines {
-  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
-}
-.bio-line {
-  position: absolute;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--eshe), transparent);
-  opacity: 0;
-  animation: bio-travel 6s ease-in-out infinite;
-}
-.bio-line:nth-child(1) { top: 25%; width: 60%; left: -10%; animation-delay: 0s; }
-.bio-line:nth-child(2) { top: 45%; width: 40%; left: 60%; animation-delay: 2s; }
-.bio-line:nth-child(3) { top: 65%; width: 50%; left: 20%; animation-delay: 4s; }
-.bio-line:nth-child(4) { top: 80%; width: 35%; left: 5%; animation-delay: 1s; }
-.bio-line:nth-child(5) { top: 15%; width: 45%; left: 40%; animation-delay: 3s; }
-@keyframes bio-travel {
-  0% { opacity: 0; transform: scaleX(0); transform-origin: left; }
-  20% { opacity: .6; }
-  60% { opacity: .3; }
-  100% { opacity: 0; transform: scaleX(1); transform-origin: left; }
-}
+/* EMAIL BOTTOM */
+.email-section{position:relative;z-index:1;background:linear-gradient(135deg,rgba(0,245,160,.05),rgba(139,92,246,.04));border-top:1px solid var(--brd);}
+.email-inner{max-width:620px;margin:0 auto;padding:clamp(60px,8vw,100px) clamp(20px,6vw,80px);text-align:center;}
+.free-badge{display:inline-block;background:rgba(0,245,160,.1);border:1px solid rgba(0,245,160,.25);border-radius:100px;padding:4px 12px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--eshe);margin-bottom:18px;}
 
-/* HERO CONTENT */
-.hero-eyebrow {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--eshe);
-  border: 1px solid rgba(0,245,160,.2);
-  background: rgba(0,245,160,.05);
-  padding: 6px 18px;
-  border-radius: 100px;
-  display: inline-block;
-  margin-bottom: 28px;
-  opacity: 0;
-  animation: fade-up .6s .2s ease forwards;
-}
+/* FOOTER */
+footer{position:relative;z-index:1;border-top:1px solid var(--brd);padding:36px clamp(20px,5vw,60px);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;}
+.footer-logo{font-family:'Unbounded',sans-serif;font-weight:900;font-size:19px;letter-spacing:-1px;color:var(--eshe);}
+.footer-center{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);line-height:1.8;text-align:center;}
+.footer-center a{color:var(--eshe);text-decoration:none;}
+.footer-socials{display:flex;gap:10px;}
+.footer-social{width:36px;height:36px;border:1px solid var(--brd);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;text-decoration:none;transition:border-color .2s,background .2s;}
+.footer-social:hover{border-color:var(--brd2);background:rgba(255,255,255,.04);}
 
-.hero-h1 {
-  font-family: 'Fraunces', Georgia, serif;
-  font-weight: 700;
-  font-size: clamp(44px, 9vw, 110px);
-  line-height: .92;
-  letter-spacing: -3px;
-  margin-bottom: 20px;
-  opacity: 0;
-  animation: fade-up .7s .35s ease forwards;
-  max-width: 900px;
-}
-.hero-h1 em {
-  font-style: italic;
-  color: var(--eshe);
-  position: relative;
-  display: inline-block;
-}
-.hero-h1 em::after {
-  content: '';
-  position: absolute;
-  bottom: 4px; left: 0; right: 0;
-  height: 3px;
-  background: var(--eshe);
-  border-radius: 2px;
-  opacity: .4;
-}
-.hero-h1-line2 {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: clamp(30px, 6vw, 74px);
-  letter-spacing: -2px;
-  color: var(--nuru);
-  display: block;
-  margin-top: 8px;
-}
+/* ANIMATIONS */
+@keyframes fade-up{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.16,1,.3,1),transform .7s cubic-bezier(.16,1,.3,1);}
+.reveal.visible{opacity:1;transform:none;}
+.reveal-delay-1{transition-delay:.1s;}.reveal-delay-2{transition-delay:.2s;}.reveal-delay-3{transition-delay:.3s;}
 
-.hero-sub {
-  font-size: clamp(16px, 2.5vw, 22px);
-  color: var(--t2);
-  max-width: 520px;
-  line-height: 1.6;
-  margin: 0 auto 40px;
-  font-style: italic;
-  opacity: 0;
-  animation: fade-up .7s .5s ease forwards;
-}
-.hero-sub strong { color: var(--t1); font-style: normal; }
-
-/* EMAIL FORM */
-.email-form {
-  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-  max-width: 460px;
-  margin: 0 auto 20px;
-  opacity: 0;
-  animation: fade-up .7s .65s ease forwards;
-}
-.email-input {
-  flex: 1; min-width: 220px;
-  font-family: 'Fraunces', serif;
-  font-size: 15px;
-  color: var(--t1);
-  background: var(--card);
-  border: 1px solid var(--brd2);
-  border-radius: 12px;
-  padding: 14px 18px;
-  outline: none;
-  transition: border-color .2s, box-shadow .2s;
-}
-.email-input::placeholder { color: var(--t3); }
-.email-input:focus {
-  border-color: rgba(0,245,160,.4);
-  box-shadow: 0 0 0 3px rgba(0,245,160,.08);
-}
-.email-submit {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: -.2px;
-  color: var(--bg);
-  background: var(--eshe);
-  border: none;
-  border-radius: 12px;
-  padding: 14px 24px;
-  transition: transform .15s, box-shadow .2s;
-  box-shadow: 0 0 24px var(--glow-green);
-  white-space: nowrap;
-}
-.email-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 32px var(--glow-green);
-}
-.email-note {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--t3);
-  opacity: 0;
-  animation: fade-up .6s .8s ease forwards;
-}
-.email-note a { color: var(--eshe); text-decoration: none; }
-
-.success-msg {
-  display: none;
-  background: rgba(0,245,160,.08);
-  border: 1px solid rgba(0,245,160,.25);
-  border-radius: 12px;
-  padding: 14px 24px;
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  color: var(--eshe);
-  letter-spacing: 1px;
-}
-
-/* HERO SOCIAL ROW */
-.hero-social {
-  display: flex; align-items: center; gap: 20px; justify-content: center;
-  margin-top: 40px;
-  opacity: 0;
-  animation: fade-up .6s .9s ease forwards;
-}
-.hs-link {
-  display: flex; align-items: center; gap: 7px;
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: var(--t3);
-  text-decoration: none;
-  transition: color .2s;
-  border: 1px solid var(--brd);
-  padding: 8px 14px;
-  border-radius: 100px;
-}
-.hs-link:hover { color: var(--t1); border-color: var(--brd2); }
-.hs-icon { font-size: 14px; }
-
-/* ─── SIGNAL MARQUEE ─── */
-.marquee-wrap {
-  position: relative; z-index: 1;
-  border-top: 1px solid var(--brd);
-  border-bottom: 1px solid var(--brd);
-  background: rgba(0,245,160,.03);
-  overflow: hidden;
-  padding: 14px 0;
-  margin-bottom: 0;
-}
-.marquee-inner {
-  display: flex; gap: 0;
-  animation: marquee 30s linear infinite;
-  white-space: nowrap;
-  width: max-content;
-}
-.marquee-item {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--t3);
-  padding: 0 32px;
-  display: flex; align-items: center; gap: 16px;
-}
-.marquee-dot { color: var(--eshe); font-size: 6px; }
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-/* ─── ABOUT / MISSION SECTION ─── */
-.section {
-  position: relative; z-index: 1;
-  padding: clamp(60px,8vw,120px) clamp(20px,6vw,80px);
-  max-width: 1100px;
-  margin: 0 auto;
-}
-.section-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 4px; text-transform: uppercase;
-  color: var(--eshe);
-  display: block; margin-bottom: 16px;
-}
-.section-h2 {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: clamp(32px, 6vw, 64px);
-  line-height: .95;
-  letter-spacing: -2px;
-  margin-bottom: 20px;
-}
-.section-h2 em { color: var(--eshe); font-style: italic; }
-
-/* TWO-COL */
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-.col-text p {
-  font-size: 17px;
-  color: var(--t2);
-  line-height: 1.75;
-  margin-bottom: 20px;
-}
-.col-text p strong { color: var(--t1); }
-
-/* STAT STRIP */
-.stat-strip {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 1px;
-  background: var(--brd);
-  border: 1px solid var(--brd);
-  border-radius: 16px;
-  overflow: hidden;
-  margin-top: 40px;
-}
-.stat-item {
-  background: var(--card);
-  padding: 24px;
-  text-align: center;
-}
-.stat-num {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: clamp(28px,5vw,48px);
-  letter-spacing: -2px;
-  color: var(--eshe);
-  display: block;
-  margin-bottom: 4px;
-  line-height: 1;
-}
-.stat-lbl {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--t3);
-}
-
-/* VISUAL PANEL (right col) */
-.visual-panel {
-  background: var(--card);
-  border: 1px solid var(--brd);
-  border-radius: 24px;
-  overflow: hidden;
-  position: relative;
-}
-.vp-top {
-  background: linear-gradient(135deg, rgba(0,245,160,.08), rgba(139,92,246,.05));
-  padding: 32px;
-  border-bottom: 1px solid var(--brd);
-  display: flex; flex-direction: column; align-items: center;
-  text-align: center;
-}
-.beep-mini {
-  font-size: 64px; margin-bottom: 12px; display: block;
-  filter: drop-shadow(0 0 20px rgba(139,92,246,.4));
-  animation: float 3s ease-in-out infinite;
-}
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-.beep-mini-name {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: 22px;
-  letter-spacing: -.5px;
-  color: var(--malik);
-  margin-bottom: 6px;
-}
-.beep-mini-quote {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  color: var(--t3);
-  font-style: italic;
-}
-.vp-bottom {
-  padding: 20px;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 8px;
-}
-.vp-slot {
-  background: var(--bg3);
-  border-radius: 10px;
-  padding: 12px 8px;
-  text-align: center;
-  border: 1px solid var(--brd);
-  transition: border-color .2s;
-}
-.vp-slot:hover { border-color: rgba(139,92,246,.3); }
-.vp-emoji { font-size: 22px; display: block; margin-bottom: 4px; }
-.vp-name { font-family: 'DM Mono', monospace; font-size: 8px; color: var(--t3); letter-spacing: .5px; }
-
-/* ─── HOW IT WORKS ─── */
-.how-section {
-  position: relative; z-index: 1;
-  background: var(--bg2);
-  border-top: 1px solid var(--brd);
-  border-bottom: 1px solid var(--brd);
-}
-.how-inner {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: clamp(60px,8vw,120px) clamp(20px,6vw,80px);
-}
-.how-grid {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 24px;
-  margin-top: 48px;
-}
-.how-card {
-  background: var(--card);
-  border: 1px solid var(--brd);
-  border-radius: 20px;
-  padding: 28px 24px;
-  position: relative;
-  overflow: hidden;
-  transition: transform .2s, border-color .2s;
-}
-.how-card:hover { transform: translateY(-4px); border-color: var(--brd2); }
-.how-num {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: 56px;
-  letter-spacing: -3px;
-  line-height: 1;
-  margin-bottom: 16px;
-  display: block;
-  opacity: .12;
-  position: absolute;
-  top: 16px; right: 20px;
-  color: var(--t1);
-}
-.how-icon { font-size: 32px; display: block; margin-bottom: 16px; }
-.how-title {
-  font-family: 'Fraunces', serif;
-  font-weight: 700;
-  font-size: 20px;
-  margin-bottom: 10px;
-  line-height: 1.2;
-}
-.how-desc {
-  font-size: 14px;
-  color: var(--t2);
-  line-height: 1.7;
-}
-.how-card:nth-child(1) { border-top: 3px solid var(--eshe); }
-.how-card:nth-child(2) { border-top: 3px solid var(--malik); }
-.how-card:nth-child(3) { border-top: 3px solid var(--kofi); }
-
-/* ─── CHARACTERS ─── */
-.chars-section {
-  position: relative; z-index: 1;
-  max-width: 1100px; margin: 0 auto;
-  padding: clamp(60px,8vw,120px) clamp(20px,6vw,80px);
-}
-.chars-scroll {
-  display: grid;
-  grid-template-columns: repeat(4,1fr);
-  gap: 14px;
-  margin-top: 40px;
-}
-.char-card {
-  background: var(--card);
-  border: 1px solid var(--brd);
-  border-radius: 16px;
-  padding: 20px 16px;
-  text-align: center;
-  transition: transform .2s, border-color .2s, box-shadow .2s;
-  position: relative; overflow: hidden;
-}
-.char-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: var(--cc);
-}
-.char-card:hover {
-  transform: translateY(-5px);
-  border-color: color-mix(in srgb, var(--cc) 30%, transparent);
-  box-shadow: 0 8px 32px color-mix(in srgb, var(--cc) 12%, transparent);
-}
-.char-emoji { font-size: 40px; display: block; margin-bottom: 12px; }
-.char-name {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: 15px;
-  letter-spacing: -.3px;
-  color: var(--cc);
-  margin-bottom: 4px;
-}
-.char-role {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--t3);
-  margin-bottom: 10px;
-  display: block;
-}
-.char-quote {
-  font-size: 12px;
-  font-style: italic;
-  color: var(--t2);
-  line-height: 1.5;
-}
-
-/* ─── BEEP GAME CTA ─── */
-.game-section {
-  position: relative; z-index: 1;
-  background: var(--bg2);
-  border-top: 1px solid var(--brd);
-}
-.game-inner {
-  max-width: 1100px; margin: 0 auto;
-  padding: clamp(60px,8vw,120px) clamp(20px,6vw,80px);
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 60px;
-  align-items: center;
-}
-.game-visual {
-  background: var(--card);
-  border: 1px solid rgba(139,92,246,.2);
-  border-radius: 24px;
-  padding: 32px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 0 60px rgba(139,92,246,.08);
-}
-.game-visual::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(139,92,246,.08), transparent);
-  pointer-events: none;
-}
-.game-emoji-row {
-  display: flex; justify-content: center; flex-wrap: wrap; gap: 10px;
-  font-size: 32px;
-  margin-bottom: 20px;
-}
-.game-emoji-spin {
-  animation: emoji-pop 3s ease-in-out infinite;
-  display: inline-block;
-}
-.game-emoji-spin:nth-child(2) { animation-delay: .4s; }
-.game-emoji-spin:nth-child(3) { animation-delay: .8s; }
-.game-emoji-spin:nth-child(4) { animation-delay: 1.2s; }
-.game-emoji-spin:nth-child(5) { animation-delay: 1.6s; }
-.game-emoji-spin:nth-child(6) { animation-delay: 2s; }
-@keyframes emoji-pop {
-  0%,80%,100% { transform: scale(1) rotate(0deg); }
-  90% { transform: scale(1.25) rotate(5deg); }
-}
-.game-quote {
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  color: var(--t2);
-  font-style: italic;
-  line-height: 1.6;
-  border-left: 2px solid rgba(139,92,246,.4);
-  padding-left: 14px;
-  text-align: left;
-  margin: 0 auto;
-  max-width: 280px;
-}
-.game-play-btn {
-  display: inline-block;
-  margin-top: 20px;
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  color: var(--bg);
-  background: var(--malik);
-  border: none;
-  border-radius: 100px;
-  padding: 13px 28px;
-  text-decoration: none;
-  transition: transform .15s, box-shadow .2s;
-  box-shadow: 0 4px 20px rgba(139,92,246,.3);
-}
-.game-play-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(139,92,246,.4);
-}
-
-/* ─── EMAIL SECTION BOTTOM ─── */
-.email-section {
-  position: relative; z-index: 1;
-  background: linear-gradient(135deg, rgba(0,245,160,.05), rgba(139,92,246,.04));
-  border-top: 1px solid var(--brd);
-}
-.email-inner {
-  max-width: 640px; margin: 0 auto;
-  padding: clamp(60px,8vw,100px) clamp(20px,6vw,80px);
-  text-align: center;
-}
-.email-inner .section-h2 { margin-bottom: 16px; }
-.email-inner p {
-  font-size: 17px;
-  color: var(--t2);
-  line-height: 1.7;
-  margin-bottom: 32px;
-}
-.free-badge {
-  display: inline-block;
-  background: rgba(0,245,160,.1);
-  border: 1px solid rgba(0,245,160,.25);
-  border-radius: 100px;
-  padding: 4px 12px;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--eshe);
-  margin-bottom: 24px;
-}
-
-/* ─── FOOTER ─── */
-footer {
-  position: relative; z-index: 1;
-  border-top: 1px solid var(--brd);
-  padding: 40px clamp(20px,5vw,60px);
-  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
-  gap: 20px;
-}
-.footer-logo {
-  font-family: 'Unbounded', sans-serif;
-  font-weight: 900;
-  font-size: 20px;
-  letter-spacing: -1px;
-  color: var(--eshe);
-}
-.footer-center {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--t3);
-  line-height: 1.8;
-  text-align: center;
-}
-.footer-center a { color: var(--eshe); text-decoration: none; }
-.footer-socials {
-  display: flex; gap: 10px;
-}
-.footer-social {
-  width: 36px; height: 36px;
-  border: 1px solid var(--brd);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 16px;
-  text-decoration: none;
-  transition: border-color .2s, background .2s;
-}
-.footer-social:hover {
-  border-color: var(--brd2);
-  background: rgba(255,255,255,.04);
-}
-
-/* ─── ANIMATIONS ─── */
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: none; }
-}
-
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1);
-}
-.reveal.visible { opacity: 1; transform: none; }
-.reveal-delay-1 { transition-delay: .1s; }
-.reveal-delay-2 { transition-delay: .2s; }
-.reveal-delay-3 { transition-delay: .3s; }
-
-/* ─── RESPONSIVE ─── */
-@media (max-width: 860px) {
-  .two-col { grid-template-columns: 1fr; gap: 40px; }
-  .how-grid { grid-template-columns: 1fr; }
-  .chars-scroll { grid-template-columns: 1fr 1fr; }
-  .game-inner { grid-template-columns: 1fr; }
-  .game-visual { order: -1; }
-  .stat-strip { grid-template-columns: 1fr; }
-}
-@media (max-width: 560px) {
-  .chars-scroll { grid-template-columns: 1fr 1fr; }
-  nav .nav-handle { display: none; }
-  .cursor, .cursor-ring { display: none; }
-  *, a, button { cursor: auto !important; }
-  footer { flex-direction: column; text-align: center; align-items: center; }
-}
+/* RESPONSIVE */
+@media(max-width:880px){.two-col,.game-inner{grid-template-columns:1fr;gap:32px;}.game-visual{order:-1;}.how-grid{grid-template-columns:1fr;}.chars-scroll{grid-template-columns:1fr 1fr;}.ancient-inner{grid-template-columns:1fr;}.stat-strip{grid-template-columns:1fr;}}
+@media(max-width:560px){nav .nav-handle{display:none;}.cursor,.cursor-ring{display:none;}*,a,button{cursor:auto!important;}footer{flex-direction:column;text-align:center;align-items:center;}}
 </style>
 </head>
 <body>
 
-<!-- CURSOR -->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursorRing"></div>
-
-<!-- ATMOSPHERE -->
 <div class="atmo"></div>
 <div class="noise"></div>
 
-<!-- ═══ NAV ═══ -->
+<!-- Global SVG filter defs for logo glow -->
+<svg width="0" height="0" style="position:absolute;overflow:hidden">
+  <defs>
+    <filter id="lglow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="lglowbright" x="-70%" y="-70%" width="240%" height="240%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+</svg>
+
+<!-- ══════════ NAV ══════════ -->
 <nav>
   <a href="#" class="nav-logo">
-    <div class="nav-bolt">⚡</div>
+    <div class="nav-logo-mark">
+      <svg viewBox="0 0 80 96" width="24" height="29" fill="none" style="overflow:visible;display:block">
+        <path class="bolt-main" d="M48 4 L28 44 L42 44 L24 92" filter="url(#lglow)"/>
+        <path class="bolt-leaf-l" d="M35 52 Q18 42 16 30 Q22 44 35 52Z"/>
+        <path class="bolt-leaf-r" d="M35 54 Q52 44 54 32 Q48 46 35 54Z"/>
+        <path class="bolt-root-l" d="M28 88 Q14 94 10 84 Q8 76 18 76"/>
+        <path class="bolt-root-r" d="M28 88 Q42 96 48 86 Q50 78 40 78"/>
+        <circle class="bolt-spark1" cx="50" cy="6" r="2.5"/>
+        <circle class="bolt-spark2" cx="56" cy="12" r="1.5"/>
+      </svg>
+    </div>
     <div class="nav-wordmark">SPARK<span>SQUAD</span></div>
   </a>
   <div class="nav-right">
@@ -830,63 +235,73 @@ footer {
   </div>
 </nav>
 
-<!-- ═══ HERO ═══ -->
+<!-- ══════════════════════════════════════
+     HERO
+     TAGLINE 1 — "The roots and the circuits speak the same language."
+     Most viral, most visual, stops the scroll.
+     Used as the BIG hero headline.
+══════════════════════════════════════ -->
 <section class="hero">
   <div class="bio-lines">
     <div class="bio-line"></div><div class="bio-line"></div>
     <div class="bio-line"></div><div class="bio-line"></div><div class="bio-line"></div>
   </div>
 
+  <!-- GLOWING LIVING BOLT — hero size -->
+  <div style="opacity:0;animation:fade-up .5s .1s ease forwards;margin-bottom:18px">
+    <svg viewBox="0 0 80 96" width="64" height="77" fill="none" style="overflow:visible;filter:drop-shadow(0 0 20px rgba(0,245,160,.5)) drop-shadow(0 0 40px rgba(0,245,160,.25))">
+      <path class="bolt-main" d="M48 4 L28 44 L42 44 L24 92" style="stroke-width:5.5;animation:bolt-pulse 2.4s ease-in-out infinite" filter="url(#lglowbright)"/>
+      <path class="bolt-leaf-l" d="M35 52 Q18 42 16 30 Q22 44 35 52Z"/>
+      <path class="bolt-leaf-r" d="M35 54 Q52 44 54 32 Q48 46 35 54Z"/>
+      <path class="bolt-root-l" d="M28 88 Q14 94 10 84 Q8 76 18 76"/>
+      <path class="bolt-root-r" d="M28 88 Q42 96 48 86 Q50 78 40 78"/>
+      <circle class="bolt-spark1" cx="50" cy="6" r="2.5"/>
+      <circle class="bolt-spark2" cx="56" cy="12" r="1.5"/>
+    </svg>
+  </div>
+
   <div class="hero-eyebrow">⚡ Signal Found · Mission Active</div>
 
   <h1 class="hero-h1">
-    Science is your<br>
-    <em>superpower.</em>
-    <span class="hero-h1-line2">Nature put it there first.</span>
+    The roots and the circuits<br>speak the <em>same language.</em>
   </h1>
 
+  <!-- TAGLINE 2 — proof line, lives just below the headline -->
+  <div class="hero-proof">
+    <span>Everything is connected</span>
+    <span class="proof-dot"></span>
+    <span>Science is how we see it</span>
+  </div>
+
   <p class="hero-sub">
-    60-second missions. Real experiments. <strong>Ancient knowledge meets modern science.</strong>
-    Join thousands of Spark Cadets discovering what the world is made of.
+    60-second missions. Real experiments.
+    <strong>Ancient knowledge reunited with modern science.</strong>
+    Join the Spark Cadets.
   </p>
 
   <form class="email-form" id="heroForm" onsubmit="submitEmail(event,'heroForm')">
-    <input
-      class="email-input"
-      type="email"
-      placeholder="your@email.com"
-      required
-      id="heroEmail"
-      aria-label="Email address"
-    >
+    <input class="email-input" type="email" placeholder="your@email.com" required id="heroEmail" aria-label="Email">
     <button class="email-submit" type="submit">Get Free Guide ⚡</button>
   </form>
-  <div class="success-msg" id="heroSuccess">⚡ Signal received! Check your inbox for Episode 1's experiment guide.</div>
-  <div class="email-note">Free experiment guide · No spam · Unsubscribe anytime · <a href="mailto:sparksquadstudios@gmail.com">sparksquadstudios@gmail.com</a></div>
+  <div class="success-msg" id="heroSuccess">⚡ Signal received! Episode 1 experiment guide is on the way.</div>
+  <div class="email-note">Free · No spam · <a href="mailto:sparksquadstudios@gmail.com">sparksquadstudios@gmail.com</a></div>
 
   <div class="hero-social">
-    <a href="https://youtube.com/@joinsparksquad" target="_blank" class="hs-link">
-      <span class="hs-icon">▶️</span> YouTube
-    </a>
-    <a href="https://instagram.com/joinsparksquad" target="_blank" class="hs-link">
-      <span class="hs-icon">📸</span> Instagram
-    </a>
-    <a href="https://tiktok.com/@joinsparksquad" target="_blank" class="hs-link">
-      <span class="hs-icon">🎵</span> TikTok
-    </a>
+    <a href="https://youtube.com/@joinsparksquad" target="_blank" class="hs-link">▶️ YouTube</a>
+    <a href="https://instagram.com/joinsparksquad" target="_blank" class="hs-link">📸 Instagram</a>
+    <a href="https://tiktok.com/@joinsparksquad" target="_blank" class="hs-link">🎵 TikTok</a>
   </div>
 </section>
 
-<!-- ═══ MARQUEE ═══ -->
+<!-- ══════════ MARQUEE ══════════ -->
 <div class="marquee-wrap">
   <div class="marquee-inner">
-    <!-- Duplicated for seamless loop -->
-    <div class="marquee-item"><span>⚡ Spark Squad</span><span class="marquee-dot">●</span><span>Science Missions</span><span class="marquee-dot">●</span><span>Ancient + Modern</span><span class="marquee-dot">●</span><span>Spark Cadets</span><span class="marquee-dot">●</span><span>60 Seconds</span><span class="marquee-dot">●</span><span>@joinsparksquad</span><span class="marquee-dot">●</span><span>Snacks and Solutions</span><span class="marquee-dot">●</span><span>Signal Found</span><span class="marquee-dot">●</span></div>
-    <div class="marquee-item"><span>⚡ Spark Squad</span><span class="marquee-dot">●</span><span>Science Missions</span><span class="marquee-dot">●</span><span>Ancient + Modern</span><span class="marquee-dot">●</span><span>Spark Cadets</span><span class="marquee-dot">●</span><span>60 Seconds</span><span class="marquee-dot">●</span><span>@joinsparksquad</span><span class="marquee-dot">●</span><span>Snacks and Solutions</span><span class="marquee-dot">●</span><span>Signal Found</span><span class="marquee-dot">●</span></div>
+    <div class="marquee-item"><span>⚡ Spark Squad</span><span class="marquee-dot">●</span><span>The Roots &amp; The Circuits</span><span class="marquee-dot">●</span><span>Ancient + Modern</span><span class="marquee-dot">●</span><span>Spark Cadets</span><span class="marquee-dot">●</span><span>60 Seconds</span><span class="marquee-dot">●</span><span>@joinsparksquad</span><span class="marquee-dot">●</span><span>Snacks and Solutions</span><span class="marquee-dot">●</span><span>Signal Found</span><span class="marquee-dot">●</span></div>
+    <div class="marquee-item"><span>⚡ Spark Squad</span><span class="marquee-dot">●</span><span>The Roots &amp; The Circuits</span><span class="marquee-dot">●</span><span>Ancient + Modern</span><span class="marquee-dot">●</span><span>Spark Cadets</span><span class="marquee-dot">●</span><span>60 Seconds</span><span class="marquee-dot">●</span><span>@joinsparksquad</span><span class="marquee-dot">●</span><span>Snacks and Solutions</span><span class="marquee-dot">●</span><span>Signal Found</span><span class="marquee-dot">●</span></div>
   </div>
 </div>
 
-<!-- ═══ ABOUT ═══ -->
+<!-- ══════════ ABOUT ══════════ -->
 <section class="section" id="about">
   <div class="two-col">
     <div class="col-text">
@@ -894,28 +309,17 @@ footer {
       <h2 class="section-h2 reveal reveal-delay-1">Science wasn't<br>discovered in a lab.<br>It was <em>always here.</em></h2>
       <p class="reveal reveal-delay-2">Plants conduct electricity. Ancient people knew it. Fungi built underground networks before the internet existed. Water remembers. Sound builds geometry. <strong>Every experiment we do has been confirmed by someone's grandmother.</strong></p>
       <p class="reveal reveal-delay-2">Spark Squad puts a crew of 11-year-old scientists on the case — led by Eshe, guided by the AI hologram Nuru, and equipped (questionably) by B.E.E.P., a vending machine that also does science.</p>
-
       <div class="stat-strip reveal reveal-delay-3">
-        <div class="stat-item">
-          <span class="stat-num">22</span>
-          <span class="stat-lbl">Missions</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">60s</span>
-          <span class="stat-lbl">Per episode</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">∞</span>
-          <span class="stat-lbl">Things to try</span>
-        </div>
+        <div class="stat-item"><span class="stat-num">22</span><span class="stat-lbl">Missions</span></div>
+        <div class="stat-item"><span class="stat-num">60s</span><span class="stat-lbl">Per episode</span></div>
+        <div class="stat-item"><span class="stat-num">∞</span><span class="stat-lbl">Things to try</span></div>
       </div>
     </div>
-
     <div class="visual-panel reveal reveal-delay-2">
       <div class="vp-top">
         <span class="beep-mini">🤖</span>
         <div class="beep-mini-name">B.E.E.P.</div>
-        <div class="beep-mini-quote">"Snacks and solutions.<br>Obviously."</div>
+        <div class="beep-mini-quote">"Snacks and solutions. Obviously."</div>
       </div>
       <div class="vp-bottom">
         <div class="vp-slot"><span class="vp-emoji">🌱</span><span class="vp-name">Nature</span></div>
@@ -929,12 +333,23 @@ footer {
   </div>
 </section>
 
-<!-- ═══ HOW IT WORKS ═══ -->
+<!-- ══════════════════════════════════════
+     PHILOSOPHY BAND
+     TAGLINE 2 — "Everything is connected. Science is how we see it."
+     Placed here as a resonance moment between about and how-it-works.
+     Parents + educators read this and feel seen. It's a shareable pull-quote.
+══════════════════════════════════════ -->
+<div class="philosophy-band">
+  <span class="pb-kicker reveal">// The Philosophy Behind the Show</span>
+  <div class="pb-quote reveal reveal-delay-1">"Everything is connected.<br><em>Science is how we see it.</em>"</div>
+  <div class="pb-sub reveal reveal-delay-2">Spark Squad · For Cadets · Parents · Educators</div>
+</div>
+
+<!-- ══════════ HOW IT WORKS ══════════ -->
 <div class="how-section">
   <div class="how-inner">
     <span class="section-label reveal">// How It Works</span>
     <h2 class="section-h2 reveal reveal-delay-1">Three steps.<br>Real science.<br>Always <em>free.</em></h2>
-
     <div class="how-grid">
       <div class="how-card reveal">
         <span class="how-num">01</span>
@@ -952,126 +367,117 @@ footer {
         <span class="how-num">03</span>
         <span class="how-icon">🏅</span>
         <div class="how-title">Earn Your Signal</div>
-        <p class="how-desc">Post your result with #SparkCadets. Log it in the Spark Notebook (coming soon). Collect badges, decode symbols hidden in every episode, and help the community crack the EDEN mystery.</p>
+        <p class="how-desc">Post your result with #SparkCadets. Collect badges, decode symbols hidden in every episode, and help the community crack the EDEN mystery across all 22 missions.</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ═══ CHARACTERS ═══ -->
+<!-- ══════════ CHARACTERS ══════════ -->
 <section class="chars-section" id="squad">
   <span class="section-label reveal">// The Squad</span>
   <h2 class="section-h2 reveal reveal-delay-1">Six scientists.<br>One <em>mission.</em></h2>
   <div class="chars-scroll">
-    <div class="char-card reveal" style="--cc:var(--eshe)">
-      <span class="char-emoji">🌿</span>
-      <div class="char-name">ESHE</div>
-      <span class="char-role">Bioelectricity · Lead</span>
-      <div class="char-quote">"I can feel it. Can you?"</div>
-    </div>
-    <div class="char-card reveal reveal-delay-1" style="--cc:var(--malik)">
-      <span class="char-emoji">🤖</span>
-      <div class="char-name">MALIK</div>
-      <span class="char-role">Tech + AI · Built B.E.E.P.</span>
-      <div class="char-quote">"Let me run the numbers."</div>
-    </div>
-    <div class="char-card reveal reveal-delay-2" style="--cc:var(--rosa)">
-      <span class="char-emoji">🌶️</span>
-      <div class="char-name">ROSA</div>
-      <span class="char-role">Chemistry · Abuela's Lab</span>
-      <div class="char-quote">"Abuela knew first."</div>
-    </div>
-    <div class="char-card reveal reveal-delay-3" style="--cc:var(--finn)">
-      <span class="char-emoji">🌤️</span>
-      <div class="char-name">FINN</div>
-      <span class="char-role">Earth Science · Observer</span>
-      <div class="char-quote">"I noticed something."</div>
-    </div>
-    <div class="char-card reveal" style="--cc:var(--kofi)">
-      <span class="char-emoji">🔨</span>
-      <div class="char-name">KOFI</div>
-      <span class="char-role">Engineering · Builder</span>
-      <div class="char-quote">"Build it to last."</div>
-    </div>
-    <div class="char-card reveal reveal-delay-1" style="--cc:#A3E635">
-      <span class="char-emoji">⚛️</span>
-      <div class="char-name">AMARA</div>
-      <span class="char-role">Physics · Frequency</span>
-      <div class="char-quote">"Everything is frequency."</div>
-    </div>
-    <div class="char-card reveal reveal-delay-2" style="--cc:var(--nuru)">
-      <span class="char-emoji">✨</span>
-      <div class="char-name">NURU</div>
-      <span class="char-role">AI Hologram · Guide</span>
-      <div class="char-quote">"Let me show you."</div>
-    </div>
-    <div class="char-card reveal reveal-delay-3" style="--cc:var(--malik)">
-      <span class="char-emoji">🤖</span>
-      <div class="char-name">B.E.E.P.</div>
-      <span class="char-role">Vending Machine · Opinions</span>
-      <div class="char-quote">"Snacks and solutions."</div>
-    </div>
+    <div class="char-card reveal" style="--cc:var(--eshe)"><span class="char-emoji">🌿</span><div class="char-name">ESHE</div><span class="char-role">Bioelectricity · Lead</span><div class="char-quote">"I can feel it. Can you?"</div></div>
+    <div class="char-card reveal reveal-delay-1" style="--cc:var(--malik)"><span class="char-emoji">🤖</span><div class="char-name">MALIK</div><span class="char-role">Tech + AI · Built B.E.E.P.</span><div class="char-quote">"Let me run the numbers."</div></div>
+    <div class="char-card reveal reveal-delay-2" style="--cc:var(--rosa)"><span class="char-emoji">🌶️</span><div class="char-name">ROSA</div><span class="char-role">Chemistry · Abuela's Lab</span><div class="char-quote">"Abuela knew first."</div></div>
+    <div class="char-card reveal reveal-delay-3" style="--cc:var(--finn)"><span class="char-emoji">🌤️</span><div class="char-name">FINN</div><span class="char-role">Earth Science · Observer</span><div class="char-quote">"I noticed something."</div></div>
+    <div class="char-card reveal" style="--cc:var(--kofi)"><span class="char-emoji">🔨</span><div class="char-name">KOFI</div><span class="char-role">Engineering · Builder</span><div class="char-quote">"Build it to last."</div></div>
+    <div class="char-card reveal reveal-delay-1" style="--cc:#A3E635"><span class="char-emoji">⚛️</span><div class="char-name">AMARA</div><span class="char-role">Physics · Frequency</span><div class="char-quote">"Everything is frequency."</div></div>
+    <div class="char-card reveal reveal-delay-2" style="--cc:var(--nuru)"><span class="char-emoji">✨</span><div class="char-name">NURU</div><span class="char-role">AI Hologram · Guide</span><div class="char-quote">"Let me show you."</div></div>
+    <div class="char-card reveal reveal-delay-3" style="--cc:var(--malik)"><span class="char-emoji">🤖</span><div class="char-name">B.E.E.P.</div><span class="char-role">Vending Machine · Opinions</span><div class="char-quote">"Snacks and solutions."</div></div>
   </div>
 </section>
 
-<!-- ═══ BEEP GAME CTA ═══ -->
-<div class="game-section" id="play">
-  <div class="game-inner">
-    <div>
-      <span class="section-label reveal">// B.E.E.P. Free Game</span>
-      <h2 class="section-h2 reveal reveal-delay-1">What does<br>B.E.E.P. <em>dispense</em><br>today?</h2>
-      <p class="reveal reveal-delay-2" style="font-size:17px;color:var(--t2);line-height:1.7;margin-bottom:24px">B.E.E.P. has six compartments. Inside: nature samples, tech tools, chemistry supplies, snacks, mystery objects, and EDEN clues. He will dispense all six simultaneously and have <em>thoughts</em> about the combination. No two results are the same.</p>
-      <a href="beep-compartment-chaos.html" class="game-play-btn reveal reveal-delay-3">⚡ Play Now — It's Free</a>
+<!-- ══════════════════════════════════════
+     ANCIENT KNOWLEDGE BAND
+     TAGLINE 3 — "Ancient knowledge. Modern proof. One truth."
+     Used as the credibility/mission section.
+     Three columns = visual, scannable, shareable.
+     This is what makes educators share the page.
+══════════════════════════════════════ -->
+<div class="ancient-band">
+  <div class="ancient-header">
+    <span class="section-label" style="display:inline-block;margin-bottom:12px">// Why This Show Exists</span>
+    <h2 class="section-h2" style="margin-bottom:0;text-align:center">Ancient knowledge.<br>Modern proof. <em>One truth.</em></h2>
+  </div>
+  <div class="ancient-inner">
+    <div class="anc-block">
+      <span class="anc-icon">🌿</span>
+      <div class="anc-label" style="color:var(--eshe)">Ancient Knowledge</div>
+      <div class="anc-desc">Every culture on Earth studied the living signal — the bioelectric force in plants, people, and soil. Healers, farmers, and astronomers knew the network was real. That wisdom was never lost. It was separated from the science that could prove it.</div>
     </div>
-    <div class="game-visual reveal reveal-delay-1">
-      <div class="game-emoji-row">
-        <span class="game-emoji-spin">🌱</span>
-        <span class="game-emoji-spin">🔧</span>
-        <span class="game-emoji-spin">🧪</span>
-        <span class="game-emoji-spin">🍎</span>
-        <span class="game-emoji-spin">❓</span>
-        <span class="game-emoji-spin">🔍</span>
-      </div>
-      <div class="game-quote">
-        "I dispensed a Tiny Moai. I have questions. They will remain unasked."<br>
-        <span style="color:var(--t3);font-size:9px;letter-spacing:2px;text-transform:uppercase;font-style:normal;margin-top:6px;display:block">— B.E.E.P., Episode 9</span>
-      </div>
-      <a href="beep-compartment-chaos.html" class="game-play-btn">🤖 Open B.E.E.P.'s Compartments</a>
+    <div class="anc-block">
+      <span class="anc-icon">🔬</span>
+      <div class="anc-label" style="color:var(--malik)">Modern Proof</div>
+      <div class="anc-desc">Today, we can measure what they felt. Bioelectric signals in plants. Mycelium networks underground. The mathematics of nature in every living form. The tools now exist to show what ancient systems always taught. The evidence is here.</div>
+    </div>
+    <div class="anc-block">
+      <span class="anc-icon">⚡</span>
+      <div class="anc-label" style="color:var(--nuru)">One Truth</div>
+      <div class="anc-desc">Spark Squad is the rejoining. Not science versus nature. Not tech versus spirit. The same system, finally whole again. When Eshe senses the bioelectric signal — that is not magic, and it is not only physics. It is both. It always was.</div>
     </div>
   </div>
 </div>
 
-<!-- ═══ EMAIL BOTTOM ═══ -->
+<!-- ══════════ BEEP GAME ══════════ -->
+<div class="game-section" id="play">
+  <div class="game-inner">
+    <div>
+      <span class="section-label reveal">// B.E.E.P. Free Game</span>
+      <h2 class="section-h2 reveal reveal-delay-1">Can you catch<br>what B.E.E.P. <em>drops?</em></h2>
+      <p class="reveal reveal-delay-2" style="font-size:17px;color:var(--t2);line-height:1.75;margin-bottom:12px">B.E.E.P. is dispensing science supplies at increasing speed. Move the catcher. Grab the probes, seeds, and sensors. <strong>Do not catch the snacks.</strong> B.E.E.P. already ate those.</p>
+      <p class="reveal reveal-delay-2" style="font-family:'DM Mono',monospace;font-size:12px;color:var(--t3);line-height:1.7;margin-bottom:28px">5 levels · combo multipliers · B.E.E.P. reacts live · beat his high score</p>
+      <a href="beep-catch-the-drop.html" class="game-play-btn reveal reveal-delay-3">⚡ Play Free — Catch the Drop</a>
+    </div>
+    <div class="game-visual reveal reveal-delay-1">
+      <span class="game-beep-preview">🤖</span>
+      <div class="game-items-row">
+        <span class="gitem f0">⚗️</span>
+        <span class="gitem f1">🌱</span>
+        <span class="gitem f2">🍎</span>
+        <span class="gitem f3">🧲</span>
+        <span class="gitem f4">🍪</span>
+        <span class="gitem f5">🔋</span>
+      </div>
+      <div class="game-catcher">🧲</div>
+      <div class="game-quote-box">
+        "Ten consecutive. I did not expect this."
+        <span class="gq-attr">— B.E.E.P., Level 4</span>
+      </div>
+      <a href="beep-catch-the-drop.html" class="game-play-btn">🤖 Play Now — It's Free</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EMAIL BOTTOM ══════════ -->
 <section class="email-section" id="join">
   <div class="email-inner">
     <span class="free-badge reveal">⚡ Free Forever · No Spam</span>
     <h2 class="section-h2 reveal reveal-delay-1">Ready to find<br>your <em>signal?</em></h2>
-    <p class="reveal reveal-delay-2">Get the free Episode 1 experiment guide — plant bioelectricity. Materials cost under $5. You will never look at a houseplant the same way again.</p>
-
-    <form class="email-form" id="bottomForm" onsubmit="submitEmail(event,'bottomForm')" style="margin-bottom:14px">
-      <input
-        class="email-input"
-        type="email"
-        placeholder="your@email.com"
-        required
-        id="bottomEmail"
-        aria-label="Email address"
-      >
+    <p class="reveal reveal-delay-2" style="font-size:17px;color:var(--t2);line-height:1.7;margin-bottom:26px">Get the free Episode 1 experiment guide — plant bioelectricity. Materials cost under $5. You will never look at a houseplant the same way again.</p>
+    <form class="email-form" id="bottomForm" onsubmit="submitEmail(event,'bottomForm')" style="margin-bottom:12px">
+      <input class="email-input" type="email" placeholder="your@email.com" required id="bottomEmail" aria-label="Email">
       <button class="email-submit" type="submit">Join the Cadets ⚡</button>
     </form>
-    <div class="success-msg" id="bottomSuccess" style="margin-bottom:14px">⚡ Signal received! Check your inbox — mission briefing inbound.</div>
-    <div class="email-note reveal reveal-delay-3">
-      Free experiment guide · sparksquadstudios@gmail.com · No spam ever
-    </div>
+    <div class="success-msg" id="bottomSuccess" style="margin-bottom:12px">⚡ Signal received! Mission briefing inbound.</div>
+    <div class="email-note reveal reveal-delay-3">Free experiment guide · sparksquadstudios@gmail.com · No spam ever</div>
   </div>
 </section>
 
-<!-- ═══ FOOTER ═══ -->
+<!-- ══════════ FOOTER ══════════ -->
 <footer>
-  <div class="footer-logo">⚡ SPARKSQUAD</div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <svg viewBox="0 0 80 96" width="18" height="22" fill="none" style="overflow:visible">
+      <path class="bolt-main" d="M48 4 L28 44 L42 44 L24 92" filter="url(#lglow)"/>
+      <path class="bolt-leaf-l" d="M35 52 Q18 42 16 30 Q22 44 35 52Z"/>
+      <path class="bolt-leaf-r" d="M35 54 Q52 44 54 32 Q48 46 35 54Z"/>
+    </svg>
+    <div class="footer-logo">SPARKSQUAD</div>
+  </div>
   <div class="footer-center">
-    <div>Science is the superpower you were born with. Nature put it there first.</div>
-    <div>
+    <div>The roots and the circuits speak the same language.</div>
+    <div style="margin-top:4px">
       <a href="https://youtube.com/@joinsparksquad" target="_blank">YouTube</a> ·
       <a href="https://instagram.com/joinsparksquad" target="_blank">Instagram</a> ·
       <a href="https://tiktok.com/@joinsparksquad" target="_blank">TikTok</a> ·
@@ -1079,87 +485,38 @@ footer {
     </div>
   </div>
   <div class="footer-socials">
-    <a href="https://youtube.com/@joinsparksquad" target="_blank" class="footer-social" title="YouTube">▶️</a>
-    <a href="https://instagram.com/joinsparksquad" target="_blank" class="footer-social" title="Instagram">📸</a>
-    <a href="https://tiktok.com/@joinsparksquad" target="_blank" class="footer-social" title="TikTok">🎵</a>
+    <a href="https://youtube.com/@joinsparksquad" target="_blank" class="footer-social">▶️</a>
+    <a href="https://instagram.com/joinsparksquad" target="_blank" class="footer-social">📸</a>
+    <a href="https://tiktok.com/@joinsparksquad" target="_blank" class="footer-social">🎵</a>
   </div>
 </footer>
 
 <script>
-// ─── CUSTOM CURSOR ─────────────────────────────────────────────────────────
-const cursor = document.getElementById('cursor');
-const ring = document.getElementById('cursorRing');
-let mx = 0, my = 0, rx = 0, ry = 0;
-
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  cursor.style.left = mx + 'px';
-  cursor.style.top = my + 'px';
+// CURSOR
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+document.querySelectorAll('a,button,input,.how-card,.char-card,.vp-slot,.anc-block').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.classList.add('grow');ring.classList.add('grow');});
+  el.addEventListener('mouseleave',()=>{cursor.classList.remove('grow');ring.classList.remove('grow');});
 });
 
-// Ring follows with lag
-function animateRing() {
-  rx += (mx - rx) * .15;
-  ry += (my - ry) * .15;
-  ring.style.left = rx + 'px';
-  ring.style.top = ry + 'px';
-  requestAnimationFrame(animateRing);
-}
-animateRing();
+// SCROLL REVEAL
+const ro=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.06,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 
-// Grow on interactive elements
-document.querySelectorAll('a, button, input, .how-card, .char-card, .vp-slot').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    cursor.classList.add('grow');
-    ring.classList.add('grow');
-  });
-  el.addEventListener('mouseleave', () => {
-    cursor.classList.remove('grow');
-    ring.classList.remove('grow');
-  });
-});
-
-// ─── SCROLL REVEAL ─────────────────────────────────────────────────────────
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-// ─── EMAIL FORM ─────────────────────────────────────────────────────────────
-function submitEmail(e, formId) {
+// EMAIL
+function submitEmail(e,id){
   e.preventDefault();
-  const emailInput = document.getElementById(formId === 'heroForm' ? 'heroEmail' : 'bottomEmail');
-  const form = document.getElementById(formId);
-  const success = document.getElementById(formId === 'heroForm' ? 'heroSuccess' : 'bottomSuccess');
-
-  const email = emailInput.value.trim();
-  if (!email) return;
-
-  // Hide form, show success
-  form.style.display = 'none';
-  success.style.display = 'block';
-
-  // In production: replace with your Mailchimp/ConvertKit AJAX endpoint
-  // fetch('https://your-mailchimp-endpoint', {
-  //   method: 'POST',
-  //   body: JSON.stringify({ email }),
-  //   headers: { 'Content-Type': 'application/json' }
-  // });
-
-  console.log('Email captured:', email, '— connect to Mailchimp in production');
+  const isHero=id==='heroForm';
+  document.getElementById(id).style.display='none';
+  document.getElementById(isHero?'heroSuccess':'bottomSuccess').style.display='block';
+  const email=document.getElementById(isHero?'heroEmail':'bottomEmail').value;
+  console.log('Email:',email,'— connect Mailchimp endpoint here');
 }
-
-// ─── BIO LINE COLORS (random green pulse) ─────────────────────────────────
-document.querySelectorAll('.bio-line').forEach((line, i) => {
-  const colors = ['var(--eshe)', 'rgba(253,230,138,.6)', 'rgba(139,92,246,.5)'];
-  line.style.background = `linear-gradient(90deg, transparent, ${colors[i % colors.length]}, transparent)`;
-});
 </script>
 </body>
 </html>
+
 
