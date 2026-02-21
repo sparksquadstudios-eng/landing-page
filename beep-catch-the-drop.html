@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>B.E.E.P. — Catch the Drop</title>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=DM+Mono:wght@400;500&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:     #07090F;
+  --bg2:    #0D1120;
+  --card:   #111827;
+  --card2:  #1A2235;
+  --brd:    rgba(255,255,255,.07);
+  --brd2:   rgba(255,255,255,.14);
+  --eshe:   #00F5A0;
+  --malik:  #8B5CF6;
+  --rosa:   #FF4F6D;
+  --kofi:   #F59E0B;
+  --nuru:   #FDE68A;
+  --finn:   #38BDF8;
+  --t1:     #FAF7F2;
+  --t2:     rgba(250,247,242,.65);
+  --t3:     rgba(250,247,242,.35);
+  --catch-glow: rgba(0,245,160,.35);
+  --miss-glow:  rgba(255,79,109,.35);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { height:100%; overflow:hidden; touch-action:none; }
+
+body {
+  background: var(--bg);
+  font-family: 'Nunito', sans-serif;
+  color: var(--t1);
+  user-select: none;
+  overflow: hidden;
+}
+
+/* ─── ATMOSPHERE ─── */
+.atmo {
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 55% 35% at 20% 10%, rgba(139,92,246,.1) 0%, transparent 55%),
+    radial-gradient(ellipse 45% 30% at 80% 85%, rgba(0,245,160,.08) 0%, transparent 55%);
+}
+
+/* ─── SCREENS ─── */
+.screen {
+  position: fixed; inset: 0; z-index: 10;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 24px;
+  transition: opacity .3s, transform .3s;
+}
+.screen.hidden {
+  opacity: 0; pointer-events: none;
+  transform: scale(.97);
+}
+
+/* ─── START SCREEN ─── */
+#startScreen {
+  text-align: center;
+  background: var(--bg);
+}
+.start-pill {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--eshe);
+  border: 1px solid rgba(0,245,160,.25);
+  background: rgba(0,245,160,.06);
+  padding: 6px 16px; border-radius: 100px;
+  display: inline-block; margin-bottom: 20px;
+}
+.start-beep {
+  font-size: 72px;
+  display: block; margin-bottom: 8px;
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 24px rgba(139,92,246,.5));
+}
+@keyframes float {
+  0%,100% { transform: translateY(0) rotate(-1deg); }
+  50%      { transform: translateY(-10px) rotate(1deg); }
+}
+.start-h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px,8vw,52px);
+  letter-spacing: -2px; line-height: .9;
+  margin-bottom: 8px;
+}
+.start-h1 span { color: var(--eshe); }
+.start-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; color: var(--t2);
+  line-height: 1.7; margin-bottom: 28px;
+  max-width: 320px;
+}
+.start-rules {
+  background: var(--card);
+  border: 1px solid var(--brd);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 28px;
+  max-width: 340px; width: 100%;
+  text-align: left;
+}
+.rule {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 12px; font-size: 13px; color: var(--t2);
+}
+.rule:last-child { margin-bottom: 0; }
+.rule-icon { font-size: 22px; flex-shrink: 0; width: 32px; text-align:center; }
+.rule strong { color: var(--t1); }
+
+.start-btn {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: 14px; letter-spacing: -.3px;
+  color: var(--bg);
+  background: linear-gradient(135deg, var(--eshe), #00D485);
+  border: none; border-radius: 100px;
+  padding: 18px 48px;
+  box-shadow: 0 4px 32px var(--catch-glow);
+  transition: transform .15s, box-shadow .2s;
+  cursor: pointer;
+  animation: pulse-btn 2s ease-in-out infinite;
+}
+@keyframes pulse-btn {
+  0%,100% { box-shadow: 0 4px 32px var(--catch-glow); }
+  50%      { box-shadow: 0 4px 48px rgba(0,245,160,.6); }
+}
+.start-btn:active { transform: scale(.96); }
+
+.highscore-display {
+  margin-top: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--t3);
+}
+.highscore-display span { color: var(--nuru); font-weight: 700; }
+
+/* ─── GAME SCREEN ─── */
+#gameScreen {
+  padding: 0;
+  background: var(--bg);
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+/* HUD */
+.hud {
+  position: relative; z-index: 20;
+  width: 100%; max-width: 480px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px 8px;
+  flex-shrink: 0;
+}
+.hud-score {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: 28px;
+  letter-spacing: -1px; color: var(--eshe);
+  line-height: 1;
+}
+.hud-score-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--t3); display: block; margin-bottom: 2px;
+}
+.hud-lives {
+  display: flex; gap: 5px; align-items: center;
+}
+.life-dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--rosa);
+  box-shadow: 0 0 8px rgba(255,79,109,.5);
+  transition: all .2s;
+}
+.life-dot.lost {
+  background: rgba(255,255,255,.1);
+  box-shadow: none;
+}
+.hud-level {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--malik);
+  text-align: right;
+}
+.hud-level-num {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: 20px;
+  color: var(--malik); display: block; line-height: 1;
+}
+
+/* BEEP + ARENA */
+.arena-wrap {
+  position: relative;
+  width: 100%; max-width: 480px;
+  flex: 1;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+/* B.E.E.P. AT TOP */
+.beep-top {
+  position: absolute;
+  top: 0; left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  width: 110px;
+  display: flex; flex-direction: column; align-items: center;
+  pointer-events: none;
+}
+.beep-body-svg {
+  width: 100%; height: auto;
+  filter: drop-shadow(0 4px 20px rgba(139,92,246,.4));
+  transition: transform .15s;
+}
+.beep-body-svg.shake {
+  animation: beep-shake .3s ease;
+}
+.beep-body-svg.happy {
+  animation: beep-happy .4s ease;
+}
+@keyframes beep-shake {
+  0%,100% { transform: rotate(0deg); }
+  20%      { transform: rotate(-6deg) scale(.96); }
+  60%      { transform: rotate(5deg) scale(1.02); }
+  80%      { transform: rotate(-3deg); }
+}
+@keyframes beep-happy {
+  0%,100% { transform: translateY(0) scale(1); }
+  40%      { transform: translateY(-8px) scale(1.05); }
+  70%      { transform: translateY(-4px) scale(1.02); }
+}
+
+/* FACE on BEEP screen — overlaid via text */
+.beep-face-overlay {
+  position: absolute;
+  top: 12px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 18px;
+  z-index: 16;
+  pointer-events: none;
+  transition: opacity .2s;
+  text-align: center;
+  width: 50px;
+}
+
+/* FALLING ITEMS */
+.falling-item {
+  position: absolute;
+  font-size: 32px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 12;
+  transition: transform .05s;
+  will-change: transform;
+  filter: drop-shadow(0 2px 8px rgba(0,0,0,.4));
+}
+.falling-item.catchable { /* science items — catch these */ }
+.falling-item.avoid {    /* snacks — don't catch */ }
+
+.falling-item .item-label {
+  position: absolute;
+  bottom: -18px; left: 50%;
+  transform: translateX(-50%);
+  font-family: 'DM Mono', monospace;
+  font-size: 7px; letter-spacing: 1px; text-transform: uppercase;
+  white-space: nowrap;
+  padding: 2px 6px; border-radius: 4px;
+  pointer-events: none;
+}
+.catchable .item-label {
+  background: rgba(0,245,160,.15);
+  color: var(--eshe);
+  border: 1px solid rgba(0,245,160,.3);
+}
+.avoid .item-label {
+  background: rgba(245,158,11,.15);
+  color: var(--kofi);
+  border: 1px solid rgba(245,158,11,.3);
+}
+
+/* CATCH FLASH */
+.catch-flash {
+  position: absolute;
+  pointer-events: none; z-index: 20;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: 16px;
+  letter-spacing: -.3px;
+  animation: catch-fly .7s ease forwards;
+}
+@keyframes catch-fly {
+  0%   { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-60px) scale(1.3); }
+}
+
+/* CATCH RING — circular burst when item caught */
+.catch-ring {
+  position: absolute;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 3px solid var(--eshe);
+  pointer-events: none; z-index: 19;
+  animation: ring-burst .4s ease forwards;
+}
+@keyframes ring-burst {
+  0%   { transform: translate(-50%,-50%) scale(.3); opacity: 1; }
+  100% { transform: translate(-50%,-50%) scale(1.8); opacity: 0; }
+}
+.catch-ring.miss-ring {
+  border-color: var(--rosa);
+  animation: ring-burst .4s ease forwards;
+}
+
+/* MISS FLASH — ground level */
+.miss-ground {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4px;
+  pointer-events: none; z-index: 20;
+  animation: miss-flash .4s ease forwards;
+}
+@keyframes miss-flash {
+  0%,50% { background: rgba(255,79,109,.6); }
+  100%   { background: transparent; opacity: 0; }
+}
+
+/* CATCH ZONE (catcher bar) */
+.catcher {
+  position: absolute;
+  bottom: 32px;
+  height: 54px;
+  z-index: 11;
+  display: flex; align-items: center; justify-content: center;
+  transition: left .05s;
+  pointer-events: none;
+}
+.catcher-inner {
+  width: 90px; height: 44px;
+  background: linear-gradient(135deg, rgba(0,245,160,.15), rgba(0,245,160,.05));
+  border: 2px solid rgba(0,245,160,.4);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 20px rgba(0,245,160,.2), inset 0 0 12px rgba(0,245,160,.05);
+  transition: border-color .1s, box-shadow .1s, transform .1s;
+  position: relative;
+  overflow: hidden;
+}
+.catcher-inner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.06), transparent);
+  pointer-events: none;
+}
+.catcher-inner.catch-pulse {
+  border-color: rgba(0,245,160,.9);
+  box-shadow: 0 0 32px rgba(0,245,160,.5);
+  animation: catcher-pop .25s ease;
+}
+.catcher-inner.miss-pulse {
+  border-color: rgba(255,79,109,.8);
+  box-shadow: 0 0 24px rgba(255,79,109,.4);
+}
+@keyframes catcher-pop {
+  0%,100% { transform: scale(1); }
+  50%      { transform: scale(1.08); }
+}
+.catcher-eshe { font-size: 24px; }
+
+/* GROUND LINE */
+.ground-line {
+  position: absolute; bottom: 24px; left: 0; right: 0;
+  height: 1px; background: var(--brd); pointer-events: none;
+}
+
+/* B.E.E.P. REACTION TOAST */
+.beep-toast {
+  position: absolute;
+  top: 95px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 18;
+  background: var(--card);
+  border: 1px solid var(--brd2);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--t1);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+  max-width: 260px;
+  white-space: normal;
+  text-align: center;
+}
+.beep-toast.visible { opacity: 1; }
+
+/* SPEED INDICATOR */
+.speed-bar-wrap {
+  width: 100%; max-width: 480px;
+  padding: 0 16px 6px;
+  flex-shrink: 0;
+}
+.speed-bar-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--t3); display: flex; justify-content: space-between;
+  margin-bottom: 4px;
+}
+.speed-bar-track {
+  height: 4px; background: var(--card2);
+  border-radius: 2px; overflow: hidden;
+}
+.speed-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--eshe), var(--malik));
+  border-radius: 2px;
+  transition: width .5s ease;
+}
+
+/* COMBO INDICATOR */
+.combo-display {
+  position: absolute;
+  top: 90px; right: 16px;
+  z-index: 18;
+  text-align: right;
+  pointer-events: none;
+}
+.combo-num {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: 32px;
+  color: var(--nuru); letter-spacing: -2px;
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(253,230,138,.5);
+  transition: transform .1s;
+}
+.combo-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--nuru); opacity: .7;
+}
+.combo-display.hidden { opacity: 0; }
+
+/* PAUSE BTN */
+.pause-btn {
+  position: absolute; top: 12px; right: 16px; z-index: 25;
+  width: 32px; height: 32px;
+  background: var(--card); border: 1px solid var(--brd);
+  border-radius: 8px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--t3);
+  transition: color .15s, border-color .15s;
+}
+.pause-btn:hover { color: var(--t1); border-color: var(--brd2); }
+
+/* ─── OVER SCREEN ─── */
+#overScreen {
+  text-align: center;
+  background: var(--bg);
+}
+.over-beep { font-size: 64px; display: block; margin-bottom: 12px; }
+.over-h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: clamp(24px,6vw,44px);
+  letter-spacing: -1.5px; line-height: .95;
+  margin-bottom: 6px;
+}
+.over-quote {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--t2);
+  font-style: italic; line-height: 1.6;
+  max-width: 300px; margin: 0 auto 24px;
+  border-left: 2px solid rgba(139,92,246,.4);
+  padding-left: 12px; text-align: left;
+}
+.over-stats {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px; width: 100%; max-width: 340px;
+  margin-bottom: 24px;
+}
+.over-stat {
+  background: var(--card); border: 1px solid var(--brd);
+  border-radius: 12px; padding: 14px 8px; text-align: center;
+}
+.over-stat-val {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: 26px;
+  letter-spacing: -1px; line-height: 1;
+  display: block; margin-bottom: 4px;
+}
+.over-stat-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: 7px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--t3);
+}
+.new-best {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--nuru); margin-bottom: 16px;
+  display: none;
+}
+.new-best.show { display: block; }
+
+.over-btns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.over-btn {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700; font-size: 12px;
+  border: none; border-radius: 100px;
+  padding: 14px 28px; cursor: pointer;
+  transition: transform .15s, box-shadow .2s;
+}
+.over-btn:active { transform: scale(.96); }
+.over-btn.primary {
+  background: linear-gradient(135deg, var(--eshe), #00D485);
+  color: var(--bg);
+  box-shadow: 0 4px 24px var(--catch-glow);
+}
+.over-btn.secondary {
+  background: var(--card); color: var(--t2);
+  border: 1px solid var(--brd);
+}
+.over-btn.share-btn {
+  background: var(--malik); color: white;
+  box-shadow: 0 4px 20px rgba(139,92,246,.3);
+}
+
+/* LEVEL UP OVERLAY */
+.level-up {
+  position: fixed; inset: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+}
+.level-up.show {
+  animation: level-flash .8s ease forwards;
+}
+@keyframes level-flash {
+  0%  { opacity: 0; }
+  15% { opacity: 1; }
+  75% { opacity: 1; }
+  100%{ opacity: 0; }
+}
+.level-up-text {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: clamp(36px,10vw,72px);
+  letter-spacing: -2px; color: var(--nuru);
+  text-shadow: 0 0 40px rgba(253,230,138,.6), 0 0 80px rgba(253,230,138,.3);
+  text-align: center;
+}
+.level-up-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+  color: var(--t2); display: block; margin-top: 8px;
+}
+
+/* COPY SUCCESS */
+.copy-toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--eshe); color: var(--bg);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  padding: 10px 20px; border-radius: 100px;
+  z-index: 100; pointer-events: none;
+  opacity: 0; transition: opacity .3s;
+}
+.copy-toast.show { opacity: 1; }
+
+/* COUNTDOWN OVERLAY */
+.countdown {
+  position: fixed; inset: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(7,9,15,.85);
+  pointer-events: none;
+}
+.countdown.hidden { display: none; }
+.countdown-num {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900; font-size: 120px;
+  letter-spacing: -5px; color: var(--eshe);
+  text-shadow: 0 0 60px var(--catch-glow);
+  animation: count-pop .4s ease;
+}
+@keyframes count-pop {
+  0%   { transform: scale(1.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 420px) {
+  .falling-item { font-size: 28px; }
+  .catcher-inner { width: 78px; }
+}
+</style>
+</head>
+<body>
+
+<div class="atmo"></div>
+
+<!-- ═══ START SCREEN ═══ -->
+<div class="screen" id="startScreen">
+  <div class="start-pill">⚡ B.E.E.P. Mini Game</div>
+  <span class="start-beep" id="startBeepEmoji">🤖</span>
+  <h1 class="start-h1">CATCH<br><span>THE DROP</span></h1>
+  <p class="start-sub">B.E.E.P. is dispensing. Move the catcher. Keep the science. Lose the snacks.</p>
+
+  <div class="start-rules">
+    <div class="rule">
+      <span class="rule-icon">⚗️</span>
+      <span><strong>Catch</strong> science supplies — probes, samples, tools</span>
+    </div>
+    <div class="rule">
+      <span class="rule-icon">🍎</span>
+      <span><strong>Dodge</strong> snacks — B.E.E.P. already ate those</span>
+    </div>
+    <div class="rule">
+      <span class="rule-icon">💥</span>
+      <span>Miss 3 science items and B.E.E.P. shuts everything down</span>
+    </div>
+    <div class="rule">
+      <span class="rule-icon">🔥</span>
+      <span><strong>Combos</strong> multiply your score — keep the streak alive</span>
+    </div>
+  </div>
+
+  <button class="start-btn" onclick="startGame()">⚡ DISPENSE EVERYTHING</button>
+  <div class="highscore-display" id="startHighScore">Best: <span id="hsDisplay">—</span></div>
+</div>
+
+<!-- ═══ GAME SCREEN ═══ -->
+<div class="screen hidden" id="gameScreen" style="align-items:center;">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div>
+      <span class="hud-score-lbl">Score</span>
+      <div class="hud-score" id="scoreDisplay">0</div>
+    </div>
+    <div class="hud-lives" id="livesDisplay">
+      <div class="life-dot" id="life-0"></div>
+      <div class="life-dot" id="life-1"></div>
+      <div class="life-dot" id="life-2"></div>
+    </div>
+    <div>
+      <span class="hud-level">Level</span>
+      <span class="hud-level-num" id="levelDisplay">1</span>
+    </div>
+  </div>
+
+  <!-- SPEED BAR -->
+  <div class="speed-bar-wrap">
+    <div class="speed-bar-label">
+      <span>Speed</span>
+      <span id="speedLabel">Normal</span>
+    </div>
+    <div class="speed-bar-track">
+      <div class="speed-bar-fill" id="speedBar" style="width:10%"></div>
+    </div>
+  </div>
+
+  <!-- ARENA -->
+  <div class="arena-wrap" id="arena">
+
+    <!-- B.E.E.P. SVG at top -->
+    <div class="beep-top" id="beepTop">
+      <svg class="beep-body-svg" id="beepSvg" viewBox="0 0 110 130" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="bodyG" x1="55" y1="0" x2="55" y2="130" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#2A3A50"/>
+            <stop offset="100%" stop-color="#1A2535"/>
+          </linearGradient>
+          <filter id="gp"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="gg"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <!-- Body -->
+        <rect x="12" y="18" width="86" height="98" rx="18" fill="url(#bodyG)" stroke="#2A3A55" stroke-width="1.2"/>
+        <!-- LED edges -->
+        <rect x="12" y="30" width="2.5" height="74" rx="1.5" fill="#8B5CF6" opacity=".9" filter="url(#gp)"/>
+        <rect x="95.5" y="30" width="2.5" height="74" rx="1.5" fill="#8B5CF6" opacity=".9" filter="url(#gp)"/>
+        <!-- Face screen -->
+        <rect x="22" y="24" width="66" height="42" rx="8" fill="#080E1C" stroke="#1a2540" stroke-width="1"/>
+        <!-- Face -->
+        <g id="beepFaceG">
+          <rect x="30" y="36" width="16" height="8" rx="4" fill="#00F5A0" opacity=".9" filter="url(#gg)"/>
+          <rect x="64" y="36" width="16" height="8" rx="4" fill="#00F5A0" opacity=".9" filter="url(#gg)"/>
+          <rect x="38" y="38" width="6" height="4" rx="2" fill="#001A0A"/>
+          <rect x="66" y="38" width="6" height="4" rx="2" fill="#001A0A"/>
+          <rect x="40" y="52" width="30" height="4" rx="2" fill="#00F5A0" opacity=".6"/>
+        </g>
+        <!-- Compartment panel -->
+        <rect x="20" y="72" width="70" height="38" rx="8" fill="#0A1522" stroke="#1a2540" stroke-width="1"/>
+        <!-- 6 compartment slots with colored dots -->
+        <rect x="26" y="77" width="18" height="12" rx="4" fill="#001A0A"/>
+        <rect x="46" y="77" width="18" height="12" rx="4" fill="#0D0020"/>
+        <rect x="66" y="77" width="18" height="12" rx="4" fill="#200010"/>
+        <rect x="26" y="93" width="18" height="12" rx="4" fill="#1A1000"/>
+        <rect x="46" y="93" width="18" height="12" rx="4" fill="#1A1600"/>
+        <rect x="66" y="93" width="18" height="12" rx="4" fill="#001020"/>
+        <circle cx="35" cy="83" r="4" fill="#00F5A0" opacity=".8" filter="url(#gg)"/>
+        <circle cx="55" cy="83" r="4" fill="#8B5CF6" opacity=".8" filter="url(#gp)"/>
+        <circle cx="75" cy="83" r="4" fill="#FF4F6D" opacity=".8"/>
+        <circle cx="35" cy="99" r="4" fill="#F59E0B" opacity=".8"/>
+        <circle cx="55" cy="99" r="4" fill="#FDE68A" opacity=".8"/>
+        <circle cx="75" cy="99" r="4" fill="#38BDF8" opacity=".8"/>
+        <!-- Arms -->
+        <rect x="0" y="60" width="14" height="6" rx="3" fill="#1E2A3A" stroke="#2A3A50" stroke-width="1"/>
+        <rect x="96" y="60" width="14" height="6" rx="3" fill="#1E2A3A" stroke="#2A3A50" stroke-width="1"/>
+        <!-- Dispense opening -->
+        <rect x="38" y="115" width="34" height="8" rx="4" fill="rgba(0,0,0,.4)" stroke="#2A3A50" stroke-width="1"/>
+      </svg>
+      <div class="beep-face-overlay" id="beepFaceOverlay">😐</div>
+    </div>
+
+    <!-- B.E.E.P. TOAST -->
+    <div class="beep-toast" id="beepToast"></div>
+
+    <!-- COMBO DISPLAY -->
+    <div class="combo-display hidden" id="comboDisplay">
+      <div class="combo-num" id="comboNum">x2</div>
+      <div class="combo-lbl">Combo</div>
+    </div>
+
+    <!-- GROUND LINE -->
+    <div class="ground-line"></div>
+
+    <!-- CATCHER -->
+    <div class="catcher" id="catcher">
+      <div class="catcher-inner" id="catcherInner">
+        <span class="catcher-eshe">🧲</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ GAME OVER SCREEN ═══ -->
+<div class="screen hidden" id="overScreen">
+  <span class="over-beep" id="overBeep">😐</span>
+  <h1 class="over-h1" id="overTitle">MISSION<br>COMPLETE</h1>
+  <div class="over-quote" id="overQuote">"Snacks and solutions. As always."</div>
+
+  <div class="new-best" id="newBestBadge">⭐ NEW BEST SCORE</div>
+
+  <div class="over-stats">
+    <div class="over-stat">
+      <span class="over-stat-val" style="color:var(--eshe)" id="finalScore">0</span>
+      <span class="over-stat-lbl">Score</span>
+    </div>
+    <div class="over-stat">
+      <span class="over-stat-val" style="color:var(--kofi)" id="finalCaught">0</span>
+      <span class="over-stat-lbl">Caught</span>
+    </div>
+    <div class="over-stat">
+      <span class="over-stat-val" style="color:var(--malik)" id="finalLevel">1</span>
+      <span class="over-stat-lbl">Level</span>
+    </div>
+  </div>
+
+  <div class="over-btns">
+    <button class="over-btn primary" onclick="startGame()">⚡ Play Again</button>
+    <button class="over-btn share-btn" onclick="shareScore()">📋 Share Score</button>
+    <button class="over-btn secondary" onclick="goHome()">Home</button>
+  </div>
+</div>
+
+<!-- LEVEL UP OVERLAY -->
+<div class="level-up" id="levelUp">
+  <div>
+    <div class="level-up-text" id="levelUpText">LEVEL 2</div>
+    <span class="level-up-sub" id="levelUpSub">Speed increased</span>
+  </div>
+</div>
+
+<!-- COUNTDOWN -->
+<div class="countdown hidden" id="countdown">
+  <div class="countdown-num" id="countdownNum">3</div>
+</div>
+
+<!-- COPY TOAST -->
+<div class="copy-toast" id="copyToast">✓ Copied to clipboard</div>
+
+<script>
+'use strict';
+
+// ─── ITEM DATA ─────────────────────────────────────────────────────────────
+const SCIENCE_ITEMS = [
+  { e:'⚗️', n:'pH Vial', pts:10 },
+  { e:'🔭', n:'IR Sensor', pts:10 },
+  { e:'⚡', n:'Zinc Probe', pts:10 },
+  { e:'🧲', n:'Magnet Disc', pts:15 },
+  { e:'💡', n:'LED Purple', pts:10 },
+  { e:'🌱', n:'Seedling Kit', pts:15 },
+  { e:'🦠', n:'Bacteria Sample', pts:20 },
+  { e:'🔋', n:'9V Battery', pts:10 },
+  { e:'🌀', n:'Fibonacci Pin', pts:25 },
+  { e:'🔬', n:'Lens Fragment', pts:15 },
+  { e:'📡', n:'Signal Stub', pts:20 },
+  { e:'🪸', n:'Coral Chip', pts:20 },
+  { e:'🧪', n:'Test Tube', pts:10 },
+  { e:'🌿', n:'Bio Herb', pts:15 },
+  { e:'🫧', n:'Soap Solution', pts:10 },
+  { e:'🐚', n:'Shell Fragment', pts:20 },
+];
+
+const SNACK_ITEMS = [
+  { e:'🍎', n:'Apple', pts:0 },
+  { e:'🍫', n:'Chocolate', pts:0 },
+  { e:'🥕', n:'Carrot', pts:0 },
+  { e:'🍪', n:'Cookie', pts:0 },
+  { e:'🥨', n:'Pretzel', pts:0 },
+  { e:'🍇', n:'Grapes', pts:0 },
+  { e:'🫐', n:'Blueberry', pts:0 },
+  { e:'🍊', n:'Orange', pts:0 },
+  { e:'🥐', n:'Croissant', pts:0 },
+  { e:'🍿', n:'Popcorn', pts:0 },
+];
+
+// B.E.E.P. reactions per event
+const BEEP_LINES = {
+  catch:    ["Nice.", "Acceptable.", "I expected this.", "Correct.", "Obviously.", "Signal acquired."],
+  snackCatch: ["That is a snack.", "You caught the snack. I am processing this.", "The snack was not the mission.", "I have concerns.", "This is not science. This is hunger."],
+  miss:     ["Missed.", "That fell.", "I noted the miss.", "The item is on the floor now.", "Gravity did its job."],
+  combo3:   ["Streak detected.", "Consistent. Good.", "I am slightly impressed. Slightly."],
+  combo5:   ["Five in a row. I am acknowledging this.", "Streak of five. Efficient."],
+  combo10:  ["Ten consecutive. I did not expect this.", "This is the best outcome. I will not say that again."],
+  level2:   ["Speed increasing. This was always going to happen.", "Level two. I am still here."],
+  level3:   ["Level three. Focus is recommended.", "Faster now. You were warned."],
+  level4:   ["Level four. I have activated the difficult mode.", "This is when most Cadets stop catching things."],
+  level5:   ["Level five. Maximum dispense rate.", "This is everything I have. Catch it."],
+  gameOver: ["Mission concluded.", "That was the last item I will dispense at this rate.", "Snacks and solutions. The solutions are now on the floor.", "I am initiating the post-mission debrief.", "You lasted longer than the simulation predicted."],
+};
+
+function pickLine(key) {
+  const arr = BEEP_LINES[key] || BEEP_LINES.catch;
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+// ─── FACES ─────────────────────────────────────────────────────────────────
+const FACES = {
+  idle:     { overlay:'😐', svgFill:'#00F5A0', mouth:'flat' },
+  happy:    { overlay:'😊', svgFill:'#00F5A0', mouth:'smile' },
+  alarmed:  { overlay:'😱', svgFill:'#EF4444', mouth:'open' },
+  smug:     { overlay:'😏', svgFill:'#8B5CF6', mouth:'smirk' },
+  thinking: { overlay:'🤔', svgFill:'#FDE68A', mouth:'flat' },
+  dispensing:{ overlay:'⬜', svgFill:'#ffffff', mouth:'open'},
+};
+
+// ─── GAME STATE ─────────────────────────────────────────────────────────────
+let state = {
+  running: false,
+  score: 0,
+  lives: 3,
+  level: 1,
+  combo: 0,
+  caught: 0,
+  dropped: 0,
+  snacksCaught: 0,
+  items: [],
+  catcherX: 0,
+  arenaW: 0,
+  arenaH: 0,
+  spawnInterval: null,
+  rafId: null,
+  toastTimer: null,
+  highScore: parseInt(localStorage.getItem('beep_hs') || '0'),
+  lastTime: 0,
+};
+
+// Level config: { spawnRate ms, fallSpeed px/s, snackRatio 0-1 }
+const LEVELS = [
+  null, // index 0 unused
+  { spawnRate:1800, fallSpeed:140, snackRatio:.25, speedLabel:'Normal',   speedPct:10 },
+  { spawnRate:1500, fallSpeed:180, snackRatio:.30, speedLabel:'Faster',   speedPct:30 },
+  { spawnRate:1200, fallSpeed:230, snackRatio:.35, speedLabel:'Quick',    speedPct:55 },
+  { spawnRate: 950, fallSpeed:290, snackRatio:.40, speedLabel:'Fast',     speedPct:75 },
+  { spawnRate: 750, fallSpeed:360, snackRatio:.45, speedLabel:'B.E.E.P. Mode', speedPct:100 },
+];
+
+const POINTS_PER_LEVEL = [null,0,150,380,680,1050];
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+function init() {
+  updateHighScoreDisplay();
+  setupInput();
+}
+
+function updateHighScoreDisplay() {
+  const hs = state.highScore;
+  document.getElementById('hsDisplay').textContent = hs > 0 ? hs : '—';
+}
+
+// ─── INPUT ───────────────────────────────────────────────────────────────────
+function setupInput() {
+  const arena = document.getElementById('arena');
+
+  // Mouse
+  arena.addEventListener('mousemove', e => {
+    if (!state.running) return;
+    const rect = arena.getBoundingClientRect();
+    moveCatcher(e.clientX - rect.left);
+  });
+
+  // Touch
+  arena.addEventListener('touchmove', e => {
+    if (!state.running) return;
+    e.preventDefault();
+    const rect = arena.getBoundingClientRect();
+    moveCatcher(e.touches[0].clientX - rect.left);
+  }, { passive: false });
+
+  // Keyboard
+  let keyLeft = false, keyRight = false;
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft'  || e.key === 'a') keyLeft  = true;
+    if (e.key === 'ArrowRight' || e.key === 'd') keyRight = true;
+    if (e.key === ' ') { e.preventDefault(); }
+  });
+  document.addEventListener('keyup', e => {
+    if (e.key === 'ArrowLeft'  || e.key === 'a') keyLeft  = false;
+    if (e.key === 'ArrowRight' || e.key === 'd') keyRight = false;
+  });
+
+  // Key-based movement loop
+  let lastKey = 0;
+  function keyLoop(ts) {
+    if (state.running && (keyLeft || keyRight)) {
+      const dt = Math.min(ts - lastKey, 50);
+      const speed = 320 * (dt / 1000);
+      if (keyLeft)  state.catcherX = Math.max(0, state.catcherX - speed);
+      if (keyRight) state.catcherX = Math.min(state.arenaW, state.catcherX + speed);
+      updateCatcherPos();
+    }
+    lastKey = ts;
+    requestAnimationFrame(keyLoop);
+  }
+  requestAnimationFrame(keyLoop);
+}
+
+function moveCatcher(x) {
+  state.catcherX = Math.max(0, Math.min(state.arenaW, x));
+  updateCatcherPos();
+}
+
+function updateCatcherPos() {
+  const el = document.getElementById('catcher');
+  el.style.left = (state.catcherX - 45) + 'px';
+}
+
+// ─── GAME FLOW ────────────────────────────────────────────────────────────────
+function startGame() {
+  showScreen('gameScreen');
+  resetState();
+  measureArena();
+  updateHUD();
+  showCountdown(() => {
+    state.running = true;
+    scheduleSpawn();
+    state.rafId = requestAnimationFrame(gameLoop);
+  });
+}
+
+function resetState() {
+  state.running = false;
+  state.score = 0;
+  state.lives = 3;
+  state.level = 1;
+  state.combo = 0;
+  state.caught = 0;
+  state.dropped = 0;
+  state.snacksCaught = 0;
+  state.items = [];
+  clearAllItems();
+  clearInterval(state.spawnInterval);
+  cancelAnimationFrame(state.rafId);
+  // reset lives UI
+  for (let i = 0; i < 3; i++) {
+    document.getElementById(`life-${i}`).classList.remove('lost');
+  }
+  setBeepFace('idle');
+  document.getElementById('comboDisplay').classList.add('hidden');
+  document.getElementById('beepToast').classList.remove('visible');
+  updateSpeedBar();
+}
+
+function measureArena() {
+  const arena = document.getElementById('arena');
+  const r = arena.getBoundingClientRect();
+  state.arenaW = r.width;
+  state.arenaH = r.height;
+  state.catcherX = r.width / 2;
+  updateCatcherPos();
+}
+
+function showCountdown(cb) {
+  const el = document.getElementById('countdown');
+  const num = document.getElementById('countdownNum');
+  el.classList.remove('hidden');
+  let n = 3;
+  num.textContent = n;
+  const iv = setInterval(() => {
+    n--;
+    if (n <= 0) {
+      clearInterval(iv);
+      el.classList.add('hidden');
+      cb();
+    } else {
+      num.textContent = n;
+      // re-trigger animation
+      num.style.animation = 'none';
+      void num.offsetWidth;
+      num.style.animation = '';
+    }
+  }, 800);
+}
+
+// ─── SPAWN ────────────────────────────────────────────────────────────────────
+function scheduleSpawn() {
+  clearInterval(state.spawnInterval);
+  const cfg = LEVELS[state.level];
+  state.spawnInterval = setInterval(spawnItem, cfg.spawnRate);
+  // Spawn one immediately
+  spawnItem();
+}
+
+function spawnItem() {
+  if (!state.running) return;
+  const cfg = LEVELS[state.level];
+  const isSnack = Math.random() < cfg.snackRatio;
+
+  const pool = isSnack ? SNACK_ITEMS : SCIENCE_ITEMS;
+  const item = pool[Math.floor(Math.random() * pool.length)];
+
+  const ITEM_W = 40;
+  const x = ITEM_W + Math.random() * (state.arenaW - ITEM_W * 2);
+  const beepBottom = 130; // height of beep SVG
+
+  const el = document.createElement('div');
+  el.className = `falling-item ${isSnack ? 'avoid' : 'catchable'}`;
+  el.dataset.type = isSnack ? 'snack' : 'science';
+  el.dataset.pts = item.pts;
+  el.dataset.name = item.n;
+  el.style.left = x + 'px';
+  el.style.top = beepBottom + 'px';
+  el.style.fontSize = isSnack ? '28px' : '32px';
+  el.innerHTML = `${item.e}<div class="item-label">${item.n}</div>`;
+
+  // Click/tap to catch (desktop help / accessibility)
+  el.addEventListener('pointerdown', () => tryManualCatch(el));
+
+  document.getElementById('arena').appendChild(el);
+
+  state.items.push({
+    el, x, y: beepBottom,
+    speed: cfg.fallSpeed * (0.85 + Math.random() * 0.3),
+    type: isSnack ? 'snack' : 'science',
+    pts: item.pts,
+    name: item.n,
+    emoji: item.e,
+    caught: false,
+    missed: false,
+  });
+
+  // B.E.E.P. dispense face flash
+  setBeepFace('dispensing');
+  setTimeout(() => setBeepFace('idle'), 200);
+  beepSvgAnim('happy');
+}
+
+// ─── GAME LOOP ────────────────────────────────────────────────────────────────
+function gameLoop(ts) {
+  if (!state.running) return;
+
+  const dt = Math.min((ts - (state.lastTime || ts)) / 1000, 0.05);
+  state.lastTime = ts;
+
+  const arenaH = state.arenaH;
+  const catcherY = arenaH - 32 - 27; // catcher vertical center
+  const catcherHalfW = 45;
+
+  for (let i = state.items.length - 1; i >= 0; i--) {
+    const item = state.items[i];
+    if (item.caught || item.missed) continue;
+
+    item.y += item.speed * dt;
+    item.el.style.top = item.y + 'px';
+
+    // Check collision with catcher
+    const itemX = item.x;
+    const itemY = item.y + 16; // center of emoji
+
+    if (
+      itemY >= catcherY - 22 &&
+      itemY <= catcherY + 22 &&
+      itemX >= state.catcherX - catcherHalfW - 16 &&
+      itemX <= state.catcherX + catcherHalfW + 16
+    ) {
+      catchItem(item, i);
+      continue;
+    }
+
+    // Missed the catcher — hit the ground
+    if (item.y > arenaH - 20) {
+      missItem(item, i);
+    }
+  }
+
+  // Level up check
+  checkLevelUp();
+
+  state.rafId = requestAnimationFrame(gameLoop);
+}
+
+// ─── CATCH / MISS ──────────────────────────────────────────────────────────────
+function catchItem(item, idx) {
+  item.caught = true;
+  item.el.remove();
+  state.items.splice(idx, 1);
+
+  if (item.type === 'science') {
+    // Good catch
+    state.combo++;
+    state.caught++;
+    const multiplier = Math.min(state.combo, 10);
+    const pts = item.pts * multiplier;
+    state.score += pts;
+
+    // Combo display
+    updateCombo();
+
+    // Visual feedback
+    spawnCatchFX(item.x, state.arenaH - 80, `+${pts}`, true);
+    spawnRing(item.x, state.arenaH - 80, false);
+    catcherPulse(true);
+    setBeepFace('happy');
+    beepSvgAnim('happy');
+
+    // B.E.E.P. lines
+    if (state.combo === 3) showToast(pickLine('combo3'));
+    else if (state.combo === 5) showToast(pickLine('combo5'));
+    else if (state.combo === 10) showToast(pickLine('combo10'));
+    else if (Math.random() < .25) showToast(pickLine('catch'));
+
+    setTimeout(() => setBeepFace('idle'), 400);
+
+  } else {
+    // Caught a snack — penalty
+    state.combo = 0;
+    state.snacksCaught++;
+    state.score = Math.max(0, state.score - 5);
+    updateCombo();
+
+    spawnCatchFX(item.x, state.arenaH - 80, '-5 🍎', false);
+    spawnRing(item.x, state.arenaH - 80, true);
+    catcherPulse(false);
+    setBeepFace('alarmed');
+    beepSvgAnim('shake');
+    showToast(pickLine('snackCatch'));
+    setTimeout(() => setBeepFace('idle'), 600);
+  }
+
+  updateHUD();
+}
+
+function missItem(item, idx) {
+  item.missed = true;
+  item.el.remove();
+  state.items.splice(idx, 1);
+
+  if (item.type === 'science') {
+    state.lives--;
+    state.combo = 0;
+    state.dropped++;
+    updateCombo();
+    updateLives();
+    flashGround();
+    setBeepFace('alarmed');
+    beepSvgAnim('shake');
+    showToast(pickLine('miss'));
+    setTimeout(() => setBeepFace('idle'), 500);
+
+    if (state.lives <= 0) {
+      setTimeout(endGame, 400);
+      return;
+    }
+  }
+  // snack landing on ground is fine — no penalty
+  updateHUD();
+}
+
+function tryManualCatch(el) {
+  // Find item in state and catch it
+  const idx = state.items.findIndex(it => it.el === el && !it.caught && !it.missed);
+  if (idx !== -1) {
+    catchItem(state.items[idx], idx);
+  }
+}
+
+// ─── LEVEL UP ─────────────────────────────────────────────────────────────────
+function checkLevelUp() {
+  if (state.level >= 5) return;
+  const threshold = POINTS_PER_LEVEL[state.level + 1];
+  if (state.score >= threshold) {
+    state.level++;
+    clearInterval(state.spawnInterval);
+    scheduleSpawn();
+    triggerLevelUp();
+    updateHUD();
+    updateSpeedBar();
+  }
+}
+
+function triggerLevelUp() {
+  const el = document.getElementById('levelUp');
+  const txt = document.getElementById('levelUpText');
+  const sub = document.getElementById('levelUpSub');
+  txt.textContent = `LEVEL ${state.level}`;
+  const cfg = LEVELS[state.level];
+  sub.textContent = cfg.speedLabel;
+  el.classList.remove('show');
+  void el.offsetWidth;
+  el.classList.add('show');
+  showToast(pickLine(`level${state.level}`) || `Level ${state.level}. Faster now.`);
+  setBeepFace('smug');
+  setTimeout(() => setBeepFace('idle'), 800);
+}
+
+// ─── END GAME ─────────────────────────────────────────────────────────────────
+function endGame() {
+  state.running = false;
+  clearInterval(state.spawnInterval);
+  cancelAnimationFrame(state.rafId);
+  clearAllItems();
+
+  // High score check
+  const isNewBest = state.score > state.highScore;
+  if (isNewBest) {
+    state.highScore = state.score;
+    localStorage.setItem('beep_hs', state.score);
+  }
+
+  // Fill over screen
+  const overBeep = state.score > 300 ? '😏' : state.score > 100 ? '😐' : '😱';
+  document.getElementById('overBeep').textContent = overBeep;
+
+  const titleEl = document.getElementById('overTitle');
+  const quoteEl = document.getElementById('overQuote');
+  if (state.score > 500) {
+    titleEl.innerHTML = 'EXCELLENT<br>CADET';
+    quoteEl.textContent = `"${pickLine('combo10')}"`;
+  } else if (state.score > 200) {
+    titleEl.innerHTML = 'MISSION<br>COMPLETE';
+    quoteEl.textContent = `"${pickLine('catch')}"`;
+  } else {
+    titleEl.innerHTML = 'MISSION<br>ENDED';
+    quoteEl.textContent = `"${pickLine('gameOver')}"`;
+  }
+
+  document.getElementById('finalScore').textContent = state.score;
+  document.getElementById('finalCaught').textContent = state.caught;
+  document.getElementById('finalLevel').textContent = state.level;
+  document.getElementById('newBestBadge').classList.toggle('show', isNewBest);
+
+  showScreen('overScreen');
+  updateHighScoreDisplay();
+}
+
+function goHome() {
+  state.running = false;
+  clearInterval(state.spawnInterval);
+  cancelAnimationFrame(state.rafId);
+  clearAllItems();
+  showScreen('startScreen');
+  updateHighScoreDisplay();
+}
+
+// ─── VISUAL FX ────────────────────────────────────────────────────────────────
+function spawnCatchFX(x, y, text, good) {
+  const arena = document.getElementById('arena');
+  const el = document.createElement('div');
+  el.className = 'catch-flash';
+  el.style.left = (x - 20) + 'px';
+  el.style.top = y + 'px';
+  el.style.color = good ? 'var(--eshe)' : 'var(--rosa)';
+  el.textContent = text;
+  arena.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+function spawnRing(x, y, miss) {
+  const arena = document.getElementById('arena');
+  const el = document.createElement('div');
+  el.className = 'catch-ring' + (miss ? ' miss-ring' : '');
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  arena.appendChild(el);
+  setTimeout(() => el.remove(), 500);
+}
+
+function flashGround() {
+  const arena = document.getElementById('arena');
+  const el = document.createElement('div');
+  el.className = 'miss-ground';
+  arena.appendChild(el);
+  setTimeout(() => el.remove(), 500);
+}
+
+function catcherPulse(good) {
+  const inner = document.getElementById('catcherInner');
+  inner.classList.remove('catch-pulse', 'miss-pulse');
+  void inner.offsetWidth;
+  inner.classList.add(good ? 'catch-pulse' : 'miss-pulse');
+  setTimeout(() => inner.classList.remove('catch-pulse', 'miss-pulse'), 300);
+}
+
+function setBeepFace(name) {
+  const face = FACES[name] || FACES.idle;
+  document.getElementById('beepFaceOverlay').textContent = face.overlay;
+}
+
+function beepSvgAnim(type) {
+  const svg = document.getElementById('beepSvg');
+  svg.classList.remove('shake', 'happy');
+  void svg.offsetWidth;
+  svg.classList.add(type);
+  setTimeout(() => svg.classList.remove(type), 500);
+}
+
+function showToast(msg) {
+  const el = document.getElementById('beepToast');
+  clearTimeout(state.toastTimer);
+  el.textContent = `"${msg}"`;
+  el.classList.add('visible');
+  state.toastTimer = setTimeout(() => el.classList.remove('visible'), 2200);
+}
+
+function updateCombo() {
+  const display = document.getElementById('comboDisplay');
+  const numEl = document.getElementById('comboNum');
+  if (state.combo >= 2) {
+    display.classList.remove('hidden');
+    numEl.textContent = `×${Math.min(state.combo, 10)}`;
+    numEl.style.transform = 'scale(1.25)';
+    setTimeout(() => numEl.style.transform = 'scale(1)', 150);
+  } else {
+    display.classList.add('hidden');
+  }
+}
+
+function updateLives() {
+  for (let i = 0; i < 3; i++) {
+    document.getElementById(`life-${i}`).classList.toggle('lost', i >= state.lives);
+  }
+}
+
+function updateHUD() {
+  document.getElementById('scoreDisplay').textContent = state.score;
+  document.getElementById('levelDisplay').textContent = state.level;
+  updateLives();
+}
+
+function updateSpeedBar() {
+  const cfg = LEVELS[state.level];
+  document.getElementById('speedBar').style.width = cfg.speedPct + '%';
+  document.getElementById('speedLabel').textContent = cfg.speedLabel;
+}
+
+function clearAllItems() {
+  state.items.forEach(item => { try { item.el.remove(); } catch(e){} });
+  state.items = [];
+  // also clear any stray DOM items
+  document.querySelectorAll('.falling-item').forEach(el => el.remove());
+  document.querySelectorAll('.catch-flash, .catch-ring, .miss-ground').forEach(el => el.remove());
+}
+
+// ─── SCREENS ─────────────────────────────────────────────────────────────────
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => {
+    s.classList.toggle('hidden', s.id !== id);
+  });
+}
+
+// ─── SHARE ────────────────────────────────────────────────────────────────────
+function shareScore() {
+  const text = `⚡ I caught ${state.caught} science supplies for B.E.E.P.!\nScore: ${state.score} · Level ${state.level}\nB.E.E.P. says: "${pickLine('gameOver')}"\n\nPlay at sparksquadstudios.com · #SparkCadets #SparkSquad`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(showCopyToast);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showCopyToast();
+  }
+}
+
+function showCopyToast() {
+  const el = document.getElementById('copyToast');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ─── START ────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
